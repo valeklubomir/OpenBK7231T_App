@@ -17,15 +17,6 @@ typedef int OBK_Publish_Result;
 // because when I did, the WiFi broke somehow
 // It seems some libraries must have the full version of vsnprintf available.
 
-#if 0
-#define vsnprintf vsnprintf2
-#define snprintf snprintf2
-#define sprintf sprintf2
-#endif
-
-int vsnprintf2(char *o, size_t olen, char const *fmt, va_list arg);
-int snprintf2(char *o, size_t olen, const char* fmt, ...);
-int sprintf2(char *o, const char* fmt, ...);
 
 // from http_fns.  should move to a utils file.
 extern unsigned char hexbyte(const char* hex);
