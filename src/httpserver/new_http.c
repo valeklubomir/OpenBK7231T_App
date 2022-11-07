@@ -444,6 +444,7 @@ const char* htmlPinRoleNames[] = {
 	"error",
 	"error",
 	"error",
+    "error",
 };
 
 const char *PIN_RoleToString(int role) {
