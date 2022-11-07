@@ -496,6 +496,5 @@ See above link for more info!
 //void Setup_Device_Calex_900011_1_WB2S();
 //void Setup_Device_Immax_NEO_LITE_NAS_WR07W();
 //void Setup_Device_MOES_TouchSwitch_WS_EU1_RFW_N();
-
 #endif
 
