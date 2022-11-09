@@ -114,7 +114,7 @@ void BL09XX_AppendInformationToHTTPIndexPage(http_request_t *request)
 			// energyCounterMinutesIndex is a long type, we need to use %ld instead of %d
             if ((i%20)!=0)
                 hprintf255(request, "<br>");
-            hprintf255(request, "History Index: %ld<br>JSON Stats: %s <br>", energyCounterMinutesIndex,
+            hprintf255(request, "History Index: %ld (%08lX)<br>JSON Stats: %s <br>", energyCounterMinutesIndex, energyCounterMinutesIndex,
                     (energyCounterStatsJSONEnable == true) ? "enabled" : "disabled");
         }
 
