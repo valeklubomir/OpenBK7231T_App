@@ -93,7 +93,7 @@ volatile uint32_t sleepTicks = 0;
 #ifdef PLATFORM_BEKEN
 uint32_t lastIRQTicks = 0;
 uint32_t lastFIQTicks = 0;
-uint32_t* isr_cnt_map = NULL;
+uint32_t *isr_cnt_map = NULL;
 #endif
 
 int DRV_SSDP_Active = 0;
@@ -491,7 +491,7 @@ void Main_OnEverySecond()
         sleepCount = 0;
         sleepTicks = 0;
 #ifdef PLATFORM_BEKEN
-        /***********************************/
+        /************************************/
         cnt = intc_get_handler_count();
         ADDLOGF_DEBUG("IRQ: %lu(%lu) FIQ: %lu(%lu) IRQ_CNT: %i\n", intc_get_irq_tick_count(), (intc_get_irq_tick_count() - lastIRQTicks),
                      intc_get_fiq_tick_count(), (intc_get_fiq_tick_count() - lastFIQTicks), cnt );
@@ -532,7 +532,7 @@ void Main_OnEverySecond()
             strcat(line,num);
         }
         ADDLOGF_DEBUG("IDIF: %s\n", line);
-        /***************************************/
+        /****************************************/
 #endif
 	}
 
@@ -882,11 +882,16 @@ void isidle(){
 
 void sleep_ticks(TickType_t ticks)
 {
+<<<<<<< HEAD
     /* Sleep count *******/
     sleepCount++;
     /* Sleep Ticks *******/
     sleepTicks += ticks;
     /*********************/
+=======
+    sleepCount++;
+    sleepTicks += ticks;
+>>>>>>> MAIN - debug output change
 }
 #endif
 
