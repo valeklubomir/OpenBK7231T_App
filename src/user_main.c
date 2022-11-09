@@ -85,7 +85,8 @@ static HALWifiStatus_t g_prevWiFiStatus = WIFI_UNDEFINED;
 
 uint8_t g_StartupDelayOver = 0;
 
-/* CPU analytics ********************/
+/* CPU analytics *********************/
+>>>>>>> MAIN - debug output change
 volatile uint32_t idleCount = 0;
 volatile uint32_t sleepCount = 0;
 volatile uint32_t sleepTicks = 0;
@@ -94,6 +95,7 @@ uint32_t lastIRQTicks = 0;
 uint32_t lastFIQTicks = 0;
 uint32_t *isr_cnt_map = NULL;
 #endif
+/*************************************/
 
 int DRV_SSDP_Active = 0;
 
