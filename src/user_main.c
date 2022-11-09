@@ -85,8 +85,7 @@ static HALWifiStatus_t g_prevWiFiStatus = WIFI_UNDEFINED;
 
 uint8_t g_StartupDelayOver = 0;
 
-uint32_t idleCount = 0;
-uint32_t sleepCount = 0;
+/* CPU analytics ********************/
 volatile uint32_t idleCount = 0;
 volatile uint32_t sleepCount = 0;
 volatile uint32_t sleepTicks = 0;
@@ -882,16 +881,11 @@ void isidle(){
 
 void sleep_ticks(TickType_t ticks)
 {
-<<<<<<< HEAD
-    /* Sleep count *******/
+    /* Sleep invoked count ******/
     sleepCount++;
-    /* Sleep Ticks *******/
+    /* Sleep Ticks requested ****/
     sleepTicks += ticks;
-    /*********************/
-=======
-    sleepCount++;
-    sleepTicks += ticks;
->>>>>>> MAIN - debug output change
+    /****************************/
 }
 #endif
 
