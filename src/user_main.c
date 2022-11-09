@@ -891,6 +891,7 @@ void sleep_ticks(TickType_t ticks)
     sleepTicks += ticks;
     /****************************/
 }
+
 #endif
 
 bool g_unsafeInitDone = false;
