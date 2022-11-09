@@ -1065,7 +1065,7 @@ void TuyaMCU_ParseStateMessage(const byte *data, int len) {
 
 }
 #define TUYA_V0_CMD_PRODUCTINFORMATION      0x01
-#define TUYA_V0_CMD_NETWEORKSTATUS          0x02
+#define TUYA_V0_CMD_NETWORKSTATUS           0x02
 #define TUYA_V0_CMD_RESETWIFI               0x03
 #define TUYA_V0_CMD_RESETWIFI_AND_SEL_CONF  0x04
 #define TUYA_V0_CMD_REALTIMESTATUS          0x05
@@ -1083,7 +1083,7 @@ void TuyaMCU_ProcessIncoming(const byte *data, int len) {
         return;
     }
     version = data[2];
-    checkLen = data[5] | data[4] >> 8;
+    checkLen = data[5] | data[4] << 8;
     checkLen = checkLen + 2 + 1 + 1 + 2 + 1;
     if(checkLen != len) {
         addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"TuyaMCU_ProcessIncoming: discarding packet bad expected len, expected %i and got len %i\n",checkLen,len);
@@ -1132,6 +1132,25 @@ void TuyaMCU_ProcessIncoming(const byte *data, int len) {
 				addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"TuyaMCU_ProcessIncoming: TUYA_CMD_MCU_CONF had wrong data lenght?");
 			} else {
 				addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"TuyaMCU_ProcessIncoming: TUYA_CMD_MCU_CONF, TODO!");
+				int dataCount;
+				// https://github.com/openshwprojects/OpenBK7231T_App/issues/291
+				// header	ver	TUYA_CMD_MCU_CONF	LENGHT							Chksum
+				// Pushing
+				// 55 AA	01	02					00 03	FF 01 01			06 
+				// 55 AA	01	02					00 03	FF 01 00			05 
+				// Rotating down
+				// 55 AA	01	02					00 05	01 24 02 01 0A		39 
+				// 55 AA	01	02					00 03	01 09 00			0F 
+				// Rotating up
+				// 55 AA	01	02					00 05	01 24 01 01 0A		38 
+				// 55 AA	01	02					00 03	01 09 01			10 
+				dataCount = data[5];
+				if((6 + dataCount + 1) != len) {
+					addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"TuyaMCU_ProcessIncoming: TUYA_CMD_MCU_CONF had wrong data lenght? (recv=%i) (prot=%i)\n",
+                              len, dataCount + 7);
+				} else {
+					addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"TuyaMCU_ProcessIncoming: TUYA_CMD_MCU_CONF, TODO!\n");
+				}
 			}
             break;
         case TUYA_CMD_WIFI_STATE:
@@ -1144,7 +1163,7 @@ void TuyaMCU_ProcessIncoming(const byte *data, int len) {
 			g_sendQueryStatePackets = 0;
             break;
         case TUYA_CMD_SET_TIME:
-            addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"TuyaMCU_ProcessIncoming: received TUYA_CMD_SET_TIME, so sending back time");
+            addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"TuyaMCU_ProcessIncoming: received TUYA_CMD_SET_TIME, so sending back time\n");
             TuyaMCU_Send_SetTime(TuyaMCU_Get_NTP_Time());
             break;
             // 55 AA 00 01 00 ${"p":"e7dny8zvmiyhqerw","v":"1.0.0"}$
@@ -1184,8 +1203,11 @@ void TuyaMCU_ProcessIncoming(const byte *data, int len) {
 			addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"TuyaMCU_ProcessIncoming: (test for TH06 calendar) received 0x24, so sending back time");
 			TuyaMCU_Send_SetTime(TuyaMCU_Get_NTP_Time());
 			break;
+        case TUYA_CMD_WIFI_SELECT:
+            addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"TuyaMCU_ProcessIncoming: received TUYA_CMD_WIFI_SELECT\n");
+            break;
         default:
-            addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"TuyaMCU_ProcessIncoming: unhandled type %i",cmd);
+            addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"TuyaMCU_ProcessIncoming: unhandled type %i\n",cmd);
             break;
     }
 	EventHandlers_FireEvent(CMD_EVENT_TUYAMCU_PARSED, cmd);
@@ -1291,6 +1313,7 @@ void TuyaMCU_RunFrame() {
     if (heartbeat_timer == 0)
     {
         /* Generate heartbeat to keep communication alove */
+        addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"Heardbeat send\n");
         TuyaMCU_SendCommandWithData(TUYA_CMD_HEARTBEAT, NULL, 0);
         heartbeat_timer = 3;
         heartbeat_counter++;
@@ -1322,18 +1345,21 @@ void TuyaMCU_RunFrame() {
             {
 				addLogAdv(LOG_EXTRADEBUG, LOG_FEATURE_TUYAMCU, "Will send TUYA_CMD_QUERY_PRODUCT.\n");
                 /* Request production information */
+                addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"Product Query Send\n");
                 TuyaMCU_SendCommandWithData(TUYA_CMD_QUERY_PRODUCT, NULL, 0);
             } 
             else if (working_mode_valid == false)
             {
 				addLogAdv(LOG_EXTRADEBUG, LOG_FEATURE_TUYAMCU, "Will send TUYA_CMD_MCU_CONF.\n");
                 /* Request working mode */
+                addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"MCU Conf Send\n");
                 TuyaMCU_SendCommandWithData(TUYA_CMD_MCU_CONF, NULL, 0);
             }
             else if ((wifi_state_valid == false) && (self_processing_mode == false))
             {
                 /* Reset wifi state -> Aquirring network connection */ 
                 Tuya_SetWifiState(g_defaultTuyaMCUWiFiState);
+                addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"Wifi State Send\n");
 				addLogAdv(LOG_EXTRADEBUG, LOG_FEATURE_TUYAMCU, "Will send TUYA_CMD_WIFI_STATE.\n");
                 TuyaMCU_SendCommandWithData(TUYA_CMD_WIFI_STATE, NULL, 0);
             }
@@ -1351,6 +1377,9 @@ void TuyaMCU_RunFrame() {
 						TuyaMCU_SendCommandWithData(TUYA_CMD_QUERY_STATE, NULL, 0);
 				}
 				g_sendQueryStatePackets++;
+                /* Request first state of all DP - this should list all existing DP */
+                addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"Query State Send\n");
+                TuyaMCU_SendCommandWithData(TUYA_CMD_QUERY_STATE, NULL, 0);
             }
             else 
             {

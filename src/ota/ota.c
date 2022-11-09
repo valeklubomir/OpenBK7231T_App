@@ -93,7 +93,7 @@ void add_otadata(unsigned char *data, int len)
             sectorlen = 0;
         } else {
             //addLogAdv(LOG_INFO, LOG_FEATURE_OTA,"OTA sectorlen 0x%x not yet 0x%x\n", sectorlen, SECTOR_SIZE);
-            rtos_delay_milliseconds(10);
+            rtos_delay_milliseconds(10 / portTICK_RATE_MS);
         }
     }
 }
@@ -152,7 +152,7 @@ int myhttpclientcallback(httprequest_t* request){
       {
         BL09XX_SaveEmeteringStatistics();
       }
-      rtos_delay_milliseconds(1000);
+      rtos_delay_milliseconds(1000 / portTICK_RATE_MS);
       bk_reboot();
       break;
   }

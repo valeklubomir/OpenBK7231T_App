@@ -75,6 +75,8 @@ void BL09XX_AppendInformationToHTTPIndexPage(http_request_t *request)
     const char *mode;
     struct tm *ltm;
 
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL_09XX AppendInformationToHTTPIndexPage called\n");
+
     if(DRV_IsRunning("BL0937")) {
         mode = "BL0937";
     } else if(DRV_IsRunning("BL0942")) {
@@ -149,6 +151,7 @@ void BL09XX_SaveEmeteringStatistics()
 {
     ENERGY_METERING_DATA data;
 
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL09XX_SaveEmeteringStatistics called\n");    
     memset(&data, 0, sizeof(ENERGY_METERING_DATA));
 
     data.TotalConsumption = energyCounter;
@@ -169,6 +172,7 @@ commandResult_t BL09XX_ResetEnergyCounter(const void *context, const char *cmd, 
     float value;
     int i;
 
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL09XX_ResetEnergyCounter called\n");
     if(args==0||*args==0) 
     {
         energyCounter = 0.0f;
@@ -216,6 +220,8 @@ commandResult_t BL09XX_SetupEnergyStatistic(const void *context, const char *cmd
     int sample_time;
     int sample_count;
     int json_enable;
+
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL09XX_SetupEnergyStatistic called\n");
 
     Tokenizer_TokenizeString(args,0);
 	// following check must be done after 'Tokenizer_TokenizeString',
@@ -302,11 +308,14 @@ commandResult_t BL09XX_SetupEnergyStatistic(const void *context, const char *cmd
 commandResult_t BL09XX_SetupConsumptionThreshold(const void *context, const char *cmd, const char *args, int cmdFlags)
 {
     float threshold;
+
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL09XX_SetupConsumptionThreshold called\n");
     Tokenizer_TokenizeString(args,0);
 	// following check must be done after 'Tokenizer_TokenizeString',
 	// so we know arguments count in Tokenizer. 'cmd' argument is
-	// only for warning display
+	// only for warning display    
 	if (Tokenizer_CheckArgsCountAndPrintWarning(cmd, 1)) {
+        addLogAdv(LOG_INFO, LOG_FEATURE_ENERGYMETER, "BL09XX_SetupConsumptionThreshold: requires argument (threshold)\n");
 		return CMD_RES_NOT_ENOUGH_ARGUMENTS;
 	}
     
@@ -347,6 +356,7 @@ void BL_ProcessUpdate(float voltage, float current, float power)
 			current = 0.0f;
 	}
 
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL_ProcessUpdate #1\n");
     // those are final values, like 230V
     lastReadings[OBK_POWER] = power;
     lastReadings[OBK_VOLTAGE] = voltage;
@@ -358,15 +368,16 @@ void BL_ProcessUpdate(float voltage, float current, float power)
     energy = (float)xPassedTicks;
     energy *= power;
     energy /= (3600000.0f / (float)portTICK_PERIOD_MS);
-    if (energy < 0)
+    if (energy < 0.0f)
     {
-        energy = 0.0;
+        energy = 0.0f;
     }
 
     energyCounter += energy;
     energyCounterStamp = xTaskGetTickCount();
     HAL_FlashVars_SaveTotalConsumption(energyCounter);
     
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL_ProcessUpdate #2\n");
     if(NTP_IsTimeSynced() == true) 
     {
         g_time = (time_t)NTP_GetCurrentTime();
@@ -420,6 +431,7 @@ void BL_ProcessUpdate(float voltage, float current, float power)
     }
 
     dailyStats[0] += energy;
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL_ProcessUpdate #2\n");
 
     if (energyCounterStatsEnable == true)
     {
@@ -513,6 +525,7 @@ void BL_ProcessUpdate(float voltage, float current, float power)
             energyCounterMinutes[0] += energy;
     }
 
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL_ProcessUpdate #3\n");
     for(i = 0; i < OBK_NUM_MEASUREMENTS; i++)
     {
         // send update only if there was a big change or if certain time has passed
@@ -545,6 +558,7 @@ void BL_ProcessUpdate(float voltage, float current, float power)
         }
     }
 
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL_ProcessUpdate #4\n");
     if ( (((energyCounter - lastSentEnergyCounterValue) >= changeSendThresholdEnergy) &&
           (noChangeFrameEnergyCounter >= changeDoNotSendMinFrames)) || 
          (noChangeFrameEnergyCounter >= changeSendAlwaysFrames) )
@@ -577,6 +591,8 @@ void BL_ProcessUpdate(float voltage, float current, float power)
         noChangeFrameEnergyCounter++;
         stat_updatesSkipped++;
     }
+    
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL_ProcessUpdate #5\n");
     if (((energyCounter - lastSavedEnergyCounterValue) >= changeSavedThresholdEnergy) ||
         ((xTaskGetTickCount() - lastConsumptionSaveStamp) >= (6 * 3600 * 1000 / portTICK_PERIOD_MS)))
     {
@@ -593,6 +609,7 @@ void BL_ProcessUpdate(float voltage, float current, float power)
             lastConsumptionSaveStamp = xTaskGetTickCount();
         }
     }
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL_ProcessUpdate #6\n");
 }
 
 void BL_Shared_Init()
@@ -600,6 +617,7 @@ void BL_Shared_Init()
     int i;
     ENERGY_METERING_DATA data;
 
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL_Shared_Init #1\n");
     for(i = 0; i < OBK_NUM_MEASUREMENTS; i++)
     {
         noChangeFrames[i] = 0;
@@ -608,6 +626,7 @@ void BL_Shared_Init()
     noChangeFrameEnergyCounter = 0;
     energyCounterStamp = xTaskGetTickCount(); 
 
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL_Shared_Init #2\n");
     if (energyCounterStatsEnable == true)
     {
         if (energyCounterMinutes == NULL)
@@ -625,6 +644,7 @@ void BL_Shared_Init()
         energyCounterMinutesIndex = 0;
     }
 
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL_Shared_Init #3\n");
     for(i = 0; i < DAILY_STATS_LENGTH; i++)
     {
         dailyStats[i] = 0;
@@ -644,6 +664,7 @@ void BL_Shared_Init()
     ConsumptionSaveCounter = data.save_counter;
     lastConsumptionSaveStamp = xTaskGetTickCount();
 
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL_Shared_Init #4\n");
     //int HAL_SetEnergyMeterStatus(ENERGY_METERING_DATA *data);
 
 	//cmddetail:{"name":"EnergyCntReset","args":"",
@@ -661,6 +682,7 @@ void BL_Shared_Init()
 	//cmddetail:"fn":"BL09XX_SetupConsumptionThreshold","file":"driver/drv_bl_shared.c","requires":"",
 	//cmddetail:"examples":""}
     CMD_RegisterCommand("ConsumptionThresold", BL09XX_SetupConsumptionThreshold, NULL);
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL_Shared_Init #5\n");
 }
 
 // OBK_POWER etc

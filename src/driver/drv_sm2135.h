@@ -24,4 +24,4 @@
 #define SM2135_55MA         0x09
 #define SM2135_60MA         0x0A
 
-#define SM2135_DELAY         4
+#define SM2135_DELAY         (4 / portTICK_RATE_MS)

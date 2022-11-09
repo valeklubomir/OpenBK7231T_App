@@ -522,7 +522,7 @@ int postany(http_request_t* request, const char* str, int len) {
 		addlen -= (request->replymaxlen - 1);
 		str += (request->replymaxlen - 1);
 
-		rtos_delay_milliseconds(1);
+		rtos_delay_milliseconds(1 / portTICK_RATE_MS);
 	}
 
 	memcpy(request->reply + request->replylen, str, addlen);

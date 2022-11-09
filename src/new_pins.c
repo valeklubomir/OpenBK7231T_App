@@ -22,7 +22,6 @@
 #include "driver/drv_ir.h"
 #endif
 
-
 // According to your need to modify the constants.
 #define PIN_TMR_DURATION      QUICK_TMR_DURATION // Delay (in ms) between button scan iterations
 #define BTN_DEBOUNCE_MS         15  //MAX 8*5

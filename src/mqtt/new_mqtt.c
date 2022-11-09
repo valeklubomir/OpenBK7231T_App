@@ -1401,7 +1401,10 @@ commandResult_t MQTT_PublishCommandFloat(const void* context, const char* cmd, c
 /****************************************************************************************************
  *
  ****************************************************************************************************/
-#define MQTT_TMR_DURATION      50
+#ifndef portTICK_RATE_MS
+#define portTICK_RATE_MS ( ( portTickType ) 1000 / configTICK_RATE_HZ )
+#endif
+#define MQTT_TMR_DURATION      (50 / portTICK_RATE_MS)
 
 typedef struct BENCHMARK_TEST_INFO
 {
@@ -1415,10 +1418,6 @@ typedef struct BENCHMARK_TEST_INFO
 	float bench_rate;
 	bool report_published;
 } BENCHMARK_TEST_INFO;
-
-#ifndef portTICK_RATE_MS
-#define portTICK_RATE_MS ( ( portTickType ) 1000 / configTICK_RATE_HZ )
-#endif
 
 void MQTT_Test_Tick(void* param)
 {

@@ -341,6 +341,7 @@ void Main_OnEverySecond()
 	g_bHasWiFiConnected = 1;
 #endif
 
+    ADDLOGF_DEBUG("Main#1\n");
 	// run_adc_test();
 	newMQTTState = MQTT_RunEverySecondUpdate();
 	if(newMQTTState != bMQTTconnected) {
@@ -356,6 +357,7 @@ void Main_OnEverySecond()
 		// Argument type here is HALWifiStatus_t enumeration
 		EventHandlers_FireEvent(CMD_EVENT_WIFI_STATE, g_newWiFiStatus);
 	}
+    ADDLOGF_DEBUG("Main#2\n");
 	MQTT_Dedup_Tick();
 	RepeatingEvents_OnEverySecond();
 #ifndef OBK_DISABLE_ALL_DRIVERS
@@ -373,7 +375,8 @@ void Main_OnEverySecond()
 		CFG_Save_IfThereArePendingChanges();
     }
 
-	if (bSafeMode == 0) {
+	if (bSafeMode == 0) 
+    {
 		const char *ip = HAL_GetMyIPString();
 		// this will return non-zero if there were any changes
 		if (strcpy_safe_checkForChanges(g_currentIPString, ip, sizeof(g_currentIPString))) {
@@ -389,6 +392,7 @@ void Main_OnEverySecond()
 		}
 	}
 
+    ADDLOGF_DEBUG("Main#3\n");
 	// some users say that despite our simple reconnect mechanism
 	// there are some rare cases when devices stuck outside network
 	// That is why we can also reconnect them by basing on ping
@@ -408,7 +412,7 @@ void Main_OnEverySecond()
             }
 		}
 	}
-
+    ADDLOGF_DEBUG("Main#4\n");
 	if(bSafeMode == 0) 
     {
 
@@ -425,7 +429,7 @@ void Main_OnEverySecond()
 			}
 		}
 	}
-
+    ADDLOGF_DEBUG("Main#5\n");
 	// allow for up to 4 scheduled driver starts.
 	for (i = 0; i < 4; i++){
 		if (scheduledDelay[i] > 0){
@@ -441,7 +445,7 @@ void Main_OnEverySecond()
 			}
 		}
 	}
-
+    ADDLOGF_DEBUG("Main#6\n");
 	g_secondsElapsed ++;
 	if(bSafeMode) {
 		safe = "[SAFE] ";
@@ -449,6 +453,7 @@ void Main_OnEverySecond()
 		safe = "";
 	}
 
+    ADDLOGF_DEBUG("Main#7\n");
 	{
 		//int mqtt_max, mqtt_cur, mqtt_mem;
 		//MQTT_GetStats(&mqtt_cur, &mqtt_max, &mqtt_mem);
@@ -466,12 +471,13 @@ void Main_OnEverySecond()
 #endif
 
 
+    ADDLOGF_DEBUG("Main#8\n");
 	// print network info
 	if (!(g_secondsElapsed % 10))
     {
 		HAL_PrintNetworkInfo();
-
 	}
+    ADDLOGF_DEBUG("Main#9\n");
 	// IR TESTING ONLY!!!!
 #ifdef PLATFORM_BK7231T
 	//DRV_IR_Print();
@@ -505,6 +511,8 @@ void Main_OnEverySecond()
 			ADDLOGF_INFO("HA discovery is scheduled, but MQTT connection is not present yet\n");
 		}
 	}
+
+    ADDLOGF_DEBUG("Main#10\n");
 	if (g_openAP)
     {
 		g_openAP--;
@@ -515,6 +523,7 @@ void Main_OnEverySecond()
 		}
 	}
 
+    ADDLOGF_DEBUG("Main#11\n");
 	//ADDLOGF_INFO("g_startPingWatchDogAfter %i, g_bPingWatchDogStarted %i ", g_startPingWatchDogAfter, g_bPingWatchDogStarted);
 	if(g_bHasWiFiConnected) {
 		if (g_startPingWatchDogAfter) {
@@ -544,9 +553,11 @@ void Main_OnEverySecond()
 					// mark as disabled
 					g_timeSinceLastPingReply = -1;
 				}
-			}
+            }
 		}
 	}
+
+    ADDLOGF_DEBUG("Main#12\n");
 	if(g_connectToWiFi)
     {
 		g_connectToWiFi --;
@@ -564,6 +575,7 @@ void Main_OnEverySecond()
 		}
 	}
 
+    ADDLOGF_DEBUG("Main#13\n");
 	// config save moved here because of stack size problems
 	if (g_saveCfgAfter){
 		g_saveCfgAfter--;
@@ -578,6 +590,8 @@ void Main_OnEverySecond()
 			Main_ForceUnsafeInit();
 		}
 	}
+
+    ADDLOGF_DEBUG("Main#14\n");
 	if (g_reset){
 		g_reset--;
 		if (!g_reset){
@@ -607,8 +621,10 @@ void Main_OnEverySecond()
 
 	// force it to sleep...  we MUST have some idle task processing
 	// else task memory doesn't get freed
-	rtos_delay_milliseconds(1);
-
+#ifndef PLATFORM_BEKEN
+	rtos_delay_milliseconds(1 / portTICK_RATE_MS);
+#endif    
+    ADDLOGF_DEBUG("Main#15\n");
 }
 
 
@@ -795,7 +811,15 @@ void isidle(){
 
 bool g_unsafeInitDone = false;
 
-void Main_Init_AfterDelay_Unsafe(bool bStartAutoRunScripts) {
+//////////////////////////////////////////////////////
+// do things which should happen BEFORE we delay at Startup
+// e.g. set lights to last value, so we get immediate response at
+// power on.
+void Main_Init_AfterDelay_Unsafe(bool bStartAutoRunScripts) 
+{
+	ADDLOGF_INFO("Main_Init_Before_Delay");
+	// read or initialise the boot count flash area
+	HAL_FlashVars_IncreaseBootCount();
 
 	// initialise MQTT - just sets up variables.
 	// all MQTT happens in timer thread?
@@ -819,6 +843,7 @@ void Main_Init_AfterDelay_Unsafe(bool bStartAutoRunScripts) {
 		CMD_ExecuteCommand("exec autoexec.bat", COMMAND_FLAG_SOURCE_SCRIPT);
 	}
 }
+
 void Main_Init_BeforeDelay_Unsafe(bool bAutoRunScripts) {
 	g_unsafeInitDone = true;
 #ifndef OBK_DISABLE_ALL_DRIVERS
@@ -919,6 +944,8 @@ void Main_Init_BeforeDelay_Unsafe(bool bAutoRunScripts) {
 
 	NewLED_RestoreSavedStateIfNeeded();
 }
+
+
 void Main_ForceUnsafeInit() {
 	if (g_unsafeInitDone) {
 		ADDLOGF_INFO("It was already done.\r\n");
@@ -928,6 +955,7 @@ void Main_ForceUnsafeInit() {
 	Main_Init_AfterDelay_Unsafe(false);
 	bSafeMode = 0;
 }
+
 //////////////////////////////////////////////////////
 // do things which should happen BEFORE we delay at Startup
 // e.g. set lights to last value, so we get immediate response at

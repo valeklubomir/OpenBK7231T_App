@@ -74,7 +74,7 @@ static void tcp_client_thread(beken_thread_arg_t arg)
 	//char reply[8192];
 
   //my_fd = fd;
-	rtos_delay_milliseconds(20);
+	rtos_delay_milliseconds(20 / portTICK_RATE_MS);
 
 	reply = (char*)os_malloc(replyBufferSize);
 	buf = (char*)os_malloc(INCOMING_BUFFER_SIZE);
@@ -185,7 +185,7 @@ static void tcp_server_thread(beken_thread_arg_t arg)
 				// in a loop of sends from the browser, e.g. OTA
 				// and we MUST get some IDLE thread time, else
 				// thread resources are not deleted.
-				rtos_delay_milliseconds(20);
+				rtos_delay_milliseconds(20 / portTICK_RATE_MS);
 				// Create separate thread for client
 				if (kNoErr !=
 #if PLATFORM_XR809
@@ -265,7 +265,7 @@ static void tcp_client_thread(int fd, char* buf, char* reply)
 	if (lenret > 0) {
 		send(fd, reply, lenret, 0);
 	}
-	rtos_delay_milliseconds(10);
+	rtos_delay_milliseconds(10 / portTICK_RATE_MS);
 
 }
 

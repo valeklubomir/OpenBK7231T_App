@@ -6,7 +6,7 @@
 #include "cmd_local.h"
 
 
-#define CMD_CLIENT_SLEEP_TIME_MS 50
+#define CMD_CLIENT_SLEEP_TIME_MS            (50 / portTICK_RATE_MS)
 #define CMD_CLIENT_DISCONNECT_AFTER_IDLE_MS (60 * 1000)
 
 #define CMD_SERVER_PORT		100
@@ -53,7 +53,7 @@ static void CMD_ClientThread(int fd)
 	}
 
 	ADDLOG_ERROR(LOG_FEATURE_CMD, "TCP client endd" );
-	rtos_delay_milliseconds(10);
+	rtos_delay_milliseconds(10 / portTICK_RATE_MS);
 
 
 }

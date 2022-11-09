@@ -1,6 +1,10 @@
 #include "new_common.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+char* itoa( int value, char* result, int base );
+char* utoa(unsigned int value, char* result, int base);
 
 const char *str_rssi[] = { "N/A", "Weak", "Fair", "Good", "Excellent" };
 

@@ -227,7 +227,7 @@ void DRV_DGR_Send_Generic(byte *message, int len) {
             sizeof(addr)
         );
 
-	rtos_delay_milliseconds(1);
+	rtos_delay_milliseconds(1 / portTICK_RATE_MS);
 
 	// send twice with same seq.
     nbytes = sendto(
