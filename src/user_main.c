@@ -78,6 +78,9 @@ uint8_t g_StartupDelayOver = 0;
 
 uint32_t idleCount = 0;
 uint32_t sleepCount = 0;
+volatile uint32_t idleCount = 0;
+volatile uint32_t sleepCount = 0;
+volatile uint32_t sleepTicks = 0;
 
 int DRV_SSDP_Active = 0;
 
@@ -466,6 +469,7 @@ void Main_OnEverySecond()
 		// reset so it's a per-second counter.
 		idleCount = 0;
         sleepCount = 0;
+        sleepTicks = 0;
 	}
 
 #ifdef OBK_MCU_SLEEP_METRICS_ENABLE
@@ -813,7 +817,8 @@ void isidle(){
 
 void sleep_ticks(TickType_t ticks)
 {
-    sleepCount += ticks;
+    sleepCount++;
+    sleepTicks += ticks;
 }
 
 bool g_unsafeInitDone = false;
