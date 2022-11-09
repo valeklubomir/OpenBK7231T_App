@@ -917,6 +917,12 @@ void Main_Init_AfterDelay_Unsafe(bool bStartAutoRunScripts)
 #ifndef OBK_DISABLE_ALL_DRIVERS
 			DRV_StartDriver("IR");
 			//ScheduleDriverStart("IR",5);
+#ifdef PLATFORM_BEKEN
+        	// this just increments our idle counter variable.
+        	// it registers a cllback from RTOS IDLE function.
+        	// why is it called IRDA??  is this where they check for IR?
+        	bg_register_irda_check_func(isidle);
+            bg_register_idle_check_func(sleep_ticks);
 #endif
 #ifdef PLATFORM_BEKEN
         	// this just increments our idle counter variable.
