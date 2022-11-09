@@ -27,8 +27,10 @@ static inline void lfs_cache_zero(lfs_t *lfs, lfs_cache_t *pcache) {
 static int lfs_bd_read(lfs_t *lfs,
         const lfs_cache_t *pcache, lfs_cache_t *rcache, lfs_size_t hint,
         lfs_block_t block, lfs_off_t off,
-        void *buffer, lfs_size_t size) {
+        void *buffer, lfs_size_t size) 
+{
     uint8_t *data = buffer;
+    int err;
     if (block >= lfs->cfg->block_count ||
             off+size > lfs->cfg->block_size) {
         return LFS_ERR_CORRUPT;
@@ -71,11 +73,12 @@ static int lfs_bd_read(lfs_t *lfs,
             diff = lfs_min(diff, rcache->off-off);
         }
 
-        if (size >= hint && off % lfs->cfg->read_size == 0 &&
-                size >= lfs->cfg->read_size) {
+        if ((size >= hint) && (off) % (lfs->cfg->read_size == 0) &&
+                (size >= lfs->cfg->read_size)) 
+        {
             // bypass cache?
             diff = lfs_aligndown(diff, lfs->cfg->read_size);
-            int err = lfs->cfg->read(lfs->cfg, block, off, data, diff);
+            err = lfs->cfg->fsread(lfs->cfg, block, off, data, diff);
             if (err) {
                 return err;
             }
@@ -91,13 +94,13 @@ static int lfs_bd_read(lfs_t *lfs,
         rcache->block = block;
         rcache->off = lfs_aligndown(off, lfs->cfg->read_size);
         rcache->size = lfs_min(
-                lfs_min(
-                    lfs_alignup(off+hint, lfs->cfg->read_size),
+                (lfs_min(
+                    (lfs_alignup(off+hint, lfs->cfg->read_size)),
                     lfs->cfg->block_size)
-                - rcache->off,
+                - rcache->off),
                 lfs->cfg->cache_size);
-        int err = lfs->cfg->read(lfs->cfg, rcache->block,
-                rcache->off, rcache->buffer, rcache->size);
+        err = lfs->cfg->fsread(lfs->cfg, rcache->block, rcache->off,
+                rcache->buffer, rcache->size);
         LFS_ASSERT(err <= 0);
         if (err) {
             return err;
@@ -4928,7 +4931,7 @@ int lfs_format(lfs_t *lfs, const struct lfs_config *cfg) {
                 ".name_max=%"PRIu32", .file_max=%"PRIu32", "
                 ".attr_max=%"PRIu32"})",
             (void*)lfs, (void*)cfg, cfg->context,
-            (void*)(uintptr_t)cfg->read, (void*)(uintptr_t)cfg->prog,
+            (void*)(uintptr_t)cfg->fsread, (void*)(uintptr_t)cfg->prog,
             (void*)(uintptr_t)cfg->erase, (void*)(uintptr_t)cfg->sync,
             cfg->read_size, cfg->prog_size, cfg->block_size, cfg->block_count,
             cfg->block_cycles, cfg->cache_size, cfg->lookahead_size,
@@ -4958,7 +4961,7 @@ int lfs_mount(lfs_t *lfs, const struct lfs_config *cfg) {
                 ".name_max=%"PRIu32", .file_max=%"PRIu32", "
                 ".attr_max=%"PRIu32"})",
             (void*)lfs, (void*)cfg, cfg->context,
-            (void*)(uintptr_t)cfg->read, (void*)(uintptr_t)cfg->prog,
+            (void*)(uintptr_t)cfg->fsread, (void*)(uintptr_t)cfg->prog,
             (void*)(uintptr_t)cfg->erase, (void*)(uintptr_t)cfg->sync,
             cfg->read_size, cfg->prog_size, cfg->block_size, cfg->block_count,
             cfg->block_cycles, cfg->cache_size, cfg->lookahead_size,

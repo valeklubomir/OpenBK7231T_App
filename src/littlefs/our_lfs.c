@@ -67,7 +67,7 @@ uint32_t LFS_Size = LFS_BLOCKS_DEFAULT_LEN;
 // configuration of the filesystem is provided by this struct
 struct lfs_config cfg = {
     // block device operations
-    .read  = lfs_read,
+    .fsread  = lfs_read,
     .prog  = lfs_write,
     .erase = lfs_erase,
     .sync  = lfs_sync,

@@ -173,7 +173,7 @@ struct lfs_config {
 
     // Read a region in a block. Negative error codes are propogated
     // to the user.
-    int (*read)(const struct lfs_config *c, lfs_block_t block,
+    int (*fsread)(const struct lfs_config *c, lfs_block_t block,
             lfs_off_t off, void *buffer, lfs_size_t size);
 
     // Program a region in a block. The block must have previously
