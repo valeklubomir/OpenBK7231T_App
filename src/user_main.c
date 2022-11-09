@@ -42,6 +42,7 @@
 #include <mcu_ps.h>
 #include <fake_clock_pub.h>
 void bg_register_irda_check_func(FUNCPTR func);
+void bg_register_idle_check_func(FUNCTICKPTR func);
 #endif
 
 static int g_secondsElapsed = 0;
@@ -76,6 +77,7 @@ static HALWifiStatus_t g_prevWiFiStatus = WIFI_UNDEFINED;
 uint8_t g_StartupDelayOver = 0;
 
 uint32_t idleCount = 0;
+uint32_t sleepCount = 0;
 
 int DRV_SSDP_Active = 0;
 
@@ -458,12 +460,12 @@ void Main_OnEverySecond()
 		//int mqtt_max, mqtt_cur, mqtt_mem;
 		//MQTT_GetStats(&mqtt_cur, &mqtt_max, &mqtt_mem);
 	    //ADDLOGF_INFO("mqtt req %i/%i, free mem %i\n", mqtt_cur,mqtt_max,mqtt_mem);
-		ADDLOGF_INFO("%sTime %i, idle %i/s, free %d, MQTT %i(%i), bWifi %i, secondsWithNoPing %i, socks %i/%i %s\n",
-			safe, g_secondsElapsed, idleCount, xPortGetFreeHeapSize(),bMQTTconnected, MQTT_GetConnectEvents(), 
-			g_bHasWiFiConnected, g_timeSinceLastPingReply, LWIP_GetActiveSockets(), LWIP_GetMaxSockets(),
-			g_powersave ? "POWERSAVE" : "");
+		ADDLOGF_INFO("%sTime %i, idle %i/s, sleep %i/s free %d, MQTT %i(%i), bWifi %i, secondsWithNoPing %i, socks %i/%i %s\n",
+			safe, g_secondsElapsed, idleCount, sleepCount, xPortGetFreeHeapSize(),bMQTTconnected, MQTT_GetConnectEvents(), 
+            g_bHasWiFiConnected, g_timeSinceLastPingReply, LWIP_GetActiveSockets(), LWIP_GetMaxSockets(), g_powersave ? "POWERSAVE" : "");
 		// reset so it's a per-second counter.
 		idleCount = 0;
+        sleepCount = 0;
 	}
 
 #ifdef OBK_MCU_SLEEP_METRICS_ENABLE
@@ -809,6 +811,11 @@ void isidle(){
 	idleCount++;
 }
 
+void sleep_ticks(TickType_t ticks)
+{
+    sleepCount += ticks;
+}
+
 bool g_unsafeInitDone = false;
 
 //////////////////////////////////////////////////////
@@ -834,6 +841,12 @@ void Main_Init_AfterDelay_Unsafe(bool bStartAutoRunScripts)
 #ifndef OBK_DISABLE_ALL_DRIVERS
 			DRV_StartDriver("IR");
 			//ScheduleDriverStart("IR",5);
+#ifdef PLATFORM_BEKEN
+        	// this just increments our idle counter variable.
+        	// it registers a cllback from RTOS IDLE function.
+        	// why is it called IRDA??  is this where they check for IR?
+        	bg_register_irda_check_func(isidle);
+            bg_register_idle_check_func(sleep_ticks);
 #endif
 		}
 
