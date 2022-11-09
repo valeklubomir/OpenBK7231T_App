@@ -492,6 +492,7 @@ void Main_OnEverySecond()
 		idleCount = 0;
         sleepCount = 0;
         sleepTicks = 0;
+
 #ifdef PLATFORM_BEKEN
         /*****************************************/
         cnt = intc_get_handler_count();
