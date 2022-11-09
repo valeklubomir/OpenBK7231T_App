@@ -1214,6 +1214,9 @@ void TuyaMCU_ProcessIncoming(const byte *data, int len) {
 
 			//}
 			break;
+        case TUYA_CMD_WIFI_SELECT:
+            addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"TuyaMCU_ProcessIncoming: received TUYA_CMD_WIFI_SELECT\n");
+            break;
         default:
             addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"TuyaMCU_ProcessIncoming: unhandled type %i\n",cmd);
             break;
