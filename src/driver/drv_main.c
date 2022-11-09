@@ -189,6 +189,7 @@ void DRV_RunQuickTick() {
     }
     DRV_Mutex_Free();
 }
+
 int DRV_OnChannelChanged(int channel, int iVal) {
     int i;
     int ch_act = 0;
@@ -261,6 +262,7 @@ void DRV_StopDriver(const char* name) {
 	}
 	DRV_Mutex_Free();
 }
+
 void DRV_StartDriver(const char* name) {
     int i;
     int bStarted;
@@ -300,6 +302,7 @@ void DRV_StartDriver(const char* name) {
     }
     DRV_Mutex_Free();
 }
+
 // startDriver DGR
 // startDriver BL0942
 // startDriver BL0937
