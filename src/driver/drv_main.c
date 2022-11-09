@@ -361,3 +361,4 @@ bool DRV_IsMeasuringPower() {
     return false;
 #endif
 }
+
