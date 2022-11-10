@@ -81,6 +81,10 @@ uint32_t sleepCount = 0;
 volatile uint32_t idleCount = 0;
 volatile uint32_t sleepCount = 0;
 volatile uint32_t sleepTicks = 0;
+#ifdef PLATFORM_BEKEN
+volatile uint32_t lastIRQTicks = 0;
+volatile uint32_t lastFIQTicks = 0;
+#endif
 
 int DRV_SSDP_Active = 0;
 
@@ -470,6 +474,12 @@ void Main_OnEverySecond()
 		idleCount = 0;
         sleepCount = 0;
         sleepTicks = 0;
+#ifdef PLATFORM_BEKEN
+        ADDLOGF_INFO("IRQ: %lu(%lu) FIQ: %lu(%lu)\n", intc_get_irq_tick_count(), (intc_get_irq_tick_count() - lastIRQTicks),
+                     intc_get_fiq_tick_count(), (intc_get_fiq_tick_count() - lastFIQTicks) );
+        lastIRQTicks = intc_get_irq_tick_count();
+        lastFIQTicks = intc_get_fiq_tick_count();
+#endif
 	}
 
 #ifdef OBK_MCU_SLEEP_METRICS_ENABLE
@@ -809,6 +819,7 @@ int Main_GetLastRebootBootFailures()
 #define RESTARTS_REQUIRED_FOR_SAFE_MODE 4
 
 
+#ifdef PLATFORM_BEKEN
 // called from idle thread each loop.
 // - just so we know it is running.
 void isidle(){
@@ -823,6 +834,7 @@ void sleep_ticks(TickType_t ticks)
     sleepTicks += ticks;
     /*********************/
 }
+#endif
 
 bool g_unsafeInitDone = false;
 
