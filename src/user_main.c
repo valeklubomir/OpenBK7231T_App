@@ -533,7 +533,7 @@ void Main_OnEverySecond()
             strcat(line,num);
         }
         ADDLOGF_DEBUG("IDIF: %s\n", line);
-        /******************************************/
+        /*******************************************/
 #endif
 	}
 
