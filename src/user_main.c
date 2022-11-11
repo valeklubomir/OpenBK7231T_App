@@ -41,17 +41,17 @@
 #ifdef PLATFORM_BEKEN
 #include <mcu_ps.h>
 #include <fake_clock_pub.h>
-/******************************************************/
+/***************************************************/
 void bg_register_irda_check_func(FUNCPTR func);
 void bg_register_idle_check_func(FUNCTICKPTR func);
-/******************************************************/
+/* FIQ/IRQ Analytics *******************************/
 UINT32 intc_get_irq_tick_count();
 UINT32 intc_get_fiq_tick_count();
-/******************************************************/
+/* IRQ analytics ***********************************/
 int intc_get_handler_count();
 UINT32 intc_get_isr_call_count(int irs_index);
 int intc_get_isr_num(int irs_index);
-/******************************************************/
+/***************************************************/
 #endif
 
 static int g_secondsElapsed = 0;
@@ -93,7 +93,7 @@ volatile uint32_t sleepTicks = 0;
 #ifdef PLATFORM_BEKEN
 uint32_t lastIRQTicks = 0;
 uint32_t lastFIQTicks = 0;
-uint32_t *isr_cnt_map = NULL;
+uint32_t* isr_cnt_map = NULL;
 #endif
 /*************************************/
 
