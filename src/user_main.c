@@ -94,7 +94,7 @@ volatile uint32_t sleepTicks = 0;
 #ifdef PLATFORM_BEKEN
 uint32_t lastIRQTicks = 0;
 uint32_t lastFIQTicks = 0;
-uint32_t *isr_cnt_map = NULL;
+uint32_t* isr_cnt_map = NULL;
 #endif
 /*************************************/
 
