@@ -571,7 +571,7 @@ void PIN_SetPinRoleForPinIndex(int index, int role) {
         {
             uart1_close();
             intc_disable(IRQ_UART1);
-            addLogAdv(LOG_DEBUG, LOG_FEATURE_GENERAL,"UART Pin used as button, UART1 CLOSE.\r\n");
+            addLogAdv(LOG_DEBUG, LOG_FEATURE_GENERAL, "UART Pin used as button, UART1 CLOSE.\r\n");
         }
     }
 #endif
