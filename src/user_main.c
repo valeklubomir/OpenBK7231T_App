@@ -41,8 +41,17 @@
 #ifdef PLATFORM_BEKEN
 #include <mcu_ps.h>
 #include <fake_clock_pub.h>
+/******************************************************/
 void bg_register_irda_check_func(FUNCPTR func);
 void bg_register_idle_check_func(FUNCTICKPTR func);
+/******************************************************/
+UINT32 intc_get_irq_tick_count();
+UINT32 intc_get_fiq_tick_count();
+/******************************************************/
+int intc_get_handler_count();
+UINT32 intc_get_isr_call_count(int irs_index);
+int intc_get_isr_num(int irs_index);
+/******************************************************/
 #endif
 
 static int g_secondsElapsed = 0;
@@ -82,8 +91,9 @@ volatile uint32_t idleCount = 0;
 volatile uint32_t sleepCount = 0;
 volatile uint32_t sleepTicks = 0;
 #ifdef PLATFORM_BEKEN
-volatile uint32_t lastIRQTicks = 0;
-volatile uint32_t lastFIQTicks = 0;
+uint32_t lastIRQTicks = 0;
+uint32_t lastFIQTicks = 0;
+uint32_t* isr_cnt_map = NULL;
 #endif
 
 int DRV_SSDP_Active = 0;
@@ -345,6 +355,12 @@ void Main_OnEverySecond()
 	int newMQTTState;
 	const char *safe;
 	int i;
+#ifdef PLATFORM_BEKEN
+    int cnt;
+    char line[256];
+    char num[16];
+    uint32_t isr_cnt;
+#endif
 
 #ifdef WINDOWS
 	g_bHasWiFiConnected = 1;
@@ -475,10 +491,35 @@ void Main_OnEverySecond()
         sleepCount = 0;
         sleepTicks = 0;
 #ifdef PLATFORM_BEKEN
-        ADDLOGF_INFO("IRQ: %lu(%lu) FIQ: %lu(%lu)\n", intc_get_irq_tick_count(), (intc_get_irq_tick_count() - lastIRQTicks),
-                     intc_get_fiq_tick_count(), (intc_get_fiq_tick_count() - lastFIQTicks) );
+        cnt = intc_get_handler_count();
+        ADDLOGF_INFO("IRQ: %lu(%lu) FIQ: %lu(%lu) IRQ_CNT: %i\n", intc_get_irq_tick_count(), (intc_get_irq_tick_count() - lastIRQTicks),
+                     intc_get_fiq_tick_count(), (intc_get_fiq_tick_count() - lastFIQTicks), cnt );
         lastIRQTicks = intc_get_irq_tick_count();
         lastFIQTicks = intc_get_fiq_tick_count();
+
+        memset(line,0,256);
+        for(i=0;i<cnt;i++)
+        {
+            if (i==0)
+                sprintf(num, "%8lu", (unsigned long)intc_get_isr_call_count(i));
+            else
+                sprintf(num, ",%8lu", (unsigned long)intc_get_isr_call_count(i));
+            strcat(line,num);
+        }
+        ADDLOGF_INFO("ICNT: %s\n", line);
+
+        memset(line,0,256);
+        for(i=0;i<cnt;i++)
+        {
+            isr_cnt = intc_get_isr_call_count(i);
+            if (i==0)
+                sprintf(num, "%8lu", (unsigned long)(isr_cnt - isr_cnt_map[i]));
+            else
+                sprintf(num, ",%8lu", (unsigned long)(isr_cnt - isr_cnt_map[i]));
+            isr_cnt_map[i] = isr_cnt;
+            strcat(line,num);
+        }
+        ADDLOGF_INFO("IDIF: %s\n", line);
 #endif
 	}
 
@@ -995,7 +1036,18 @@ void Main_ForceUnsafeInit() {
 // power on.
 void Main_Init_Before_Delay()
 {
+    int i;
+
 	ADDLOGF_INFO("Main_Init_Before_Delay");
+
+#ifdef PLATFORM_BEKEN
+    isr_cnt_map = (uint32_t*)os_malloc(32*(sizeof(uint32_t)));
+    for(i=0;i<32;i++)
+    {
+        isr_cnt_map[i] = 0;
+    }
+#endif    
+
 	// read or initialise the boot count flash area
 	HAL_FlashVars_IncreaseBootCount();
 
