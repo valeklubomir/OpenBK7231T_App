@@ -20,7 +20,10 @@
 #ifdef PLATFORM_BEKEN
 #include <gpio_pub.h>
 #include "driver/drv_ir.h"
+#include "uart.h"
+#include "intc_pub.h"
 #endif
+
 
 // According to your need to modify the constants.
 #define PIN_TMR_DURATION      QUICK_TMR_DURATION // Delay (in ms) between button scan iterations
@@ -723,13 +726,13 @@ void PIN_SetPinRoleForPinIndex(int index, int role) {
                 int channelIndex;
                 int channelValue;
 
-			channelIndex = PIN_GetPinChannelForPinIndex(index);
-			channelValue = g_channelValues[channelIndex];
+    			channelIndex = PIN_GetPinChannelForPinIndex(index);
+	    		channelValue = g_channelValues[channelIndex];
 
-			HAL_PIN_Setup_Output(index);
-			HAL_PIN_SetOutputValue(index, 0);
-		}
-		break;
+    			HAL_PIN_Setup_Output(index);
+	    		HAL_PIN_SetOutputValue(index, 0);
+    		}
+	    	break;
 
         case IOR_AlwaysHigh:
             {
@@ -745,9 +748,9 @@ void PIN_SetPinRoleForPinIndex(int index, int role) {
             break;
         case IOR_LED_WIFI:
         case IOR_LED_WIFI_n:
-        {
-            HAL_PIN_Setup_Output(index);
-        }
+            {
+                HAL_PIN_Setup_Output(index);
+            }
             break;
         case IOR_ADC:
             // init ADC for given pin

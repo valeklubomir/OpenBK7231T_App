@@ -501,6 +501,17 @@ void Main_OnEverySecond()
         for(i=0;i<cnt;i++)
         {
             if (i==0)
+                sprintf(num, "#%7i", (int)intc_get_isr_num(i));
+            else
+                sprintf(num, ",#%7i", (int)intc_get_isr_num(i));
+            strcat(line,num);
+        }
+        ADDLOGF_INFO("INUM: %s\n", line);
+
+        memset(line,0,256);
+        for(i=0;i<cnt;i++)
+        {
+            if (i==0)
                 sprintf(num, "%8lu", (unsigned long)intc_get_isr_call_count(i));
             else
                 sprintf(num, ",%8lu", (unsigned long)intc_get_isr_call_count(i));
