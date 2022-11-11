@@ -492,7 +492,7 @@ void Main_OnEverySecond()
         sleepTicks = 0;
 #ifdef PLATFORM_BEKEN
         cnt = intc_get_handler_count();
-        ADDLOGF_INFO("IRQ: %lu(%lu) FIQ: %lu(%lu) IRQ_CNT: %i\n", intc_get_irq_tick_count(), (intc_get_irq_tick_count() - lastIRQTicks),
+        ADDLOGF_DEBUG("IRQ: %lu(%lu) FIQ: %lu(%lu) IRQ_CNT: %i\n", intc_get_irq_tick_count(), (intc_get_irq_tick_count() - lastIRQTicks),
                      intc_get_fiq_tick_count(), (intc_get_fiq_tick_count() - lastFIQTicks), cnt );
         lastIRQTicks = intc_get_irq_tick_count();
         lastFIQTicks = intc_get_fiq_tick_count();
@@ -506,7 +506,7 @@ void Main_OnEverySecond()
                 sprintf(num, ",#%7i", (int)intc_get_isr_num(i));
             strcat(line,num);
         }
-        ADDLOGF_INFO("INUM: %s\n", line);
+        ADDLOGF_DEBUG("INUM: %s\n", line);
 
         memset(line,0,256);
         for(i=0;i<cnt;i++)
@@ -517,7 +517,7 @@ void Main_OnEverySecond()
                 sprintf(num, ",%8lu", (unsigned long)intc_get_isr_call_count(i));
             strcat(line,num);
         }
-        ADDLOGF_INFO("ICNT: %s\n", line);
+        ADDLOGF_DEBUG("ICNT: %s\n", line);
 
         memset(line,0,256);
         for(i=0;i<cnt;i++)
@@ -530,7 +530,7 @@ void Main_OnEverySecond()
             isr_cnt_map[i] = isr_cnt;
             strcat(line,num);
         }
-        ADDLOGF_INFO("IDIF: %s\n", line);
+        ADDLOGF_DEBUG("IDIF: %s\n", line);
 #endif
 	}
 
