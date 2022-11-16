@@ -45,7 +45,6 @@ static commandResult_t testStrdup(const void * context, const char *cmd, const c
 	int repeats;
 	int rep;
     char *msg;
-	//int i;
 	int ra1;
 	static int totalCalls = 0;
 	const char *s = "Strdup test123";
