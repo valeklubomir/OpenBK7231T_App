@@ -570,6 +570,7 @@ void PIN_SetPinRoleForPinIndex(int index, int role) {
     {
         if (g_cfg.pins.roles[index] != IOR_None)
         {
+            /* Disable UART on pin 10 and pin 11. Mostly RXD1 is redicted */
             uart1_close();
             intc_disable(IRQ_UART1);
             addLogAdv(LOG_DEBUG, LOG_FEATURE_GENERAL, "UART Pin used as button, UART1 CLOSE.\r\n");
