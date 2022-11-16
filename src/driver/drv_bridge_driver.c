@@ -190,7 +190,7 @@ void Bridge_driver_QuickFrame()
 }
 
 /***************************************************************************************/
-void Bridge_driver_OnChannelChanged(int ch, int value)
+void Bridge_driver_OnChannelChanged(int ch, int value) 
 {
     int i;
 
