@@ -52,10 +52,12 @@ void Test_Power_RunFrame() {
 //Test LED driver
 void Test_LED_Driver_Init() {
 }
+
 void Test_LED_Driver_RunFrame() {
 }
+
 /*
- * Test_LED_Driver_OnChannelChanged
+ * Test_LED_Driver_OnChannelChanged function
  *
  * Input:
  *  int ch - channel number
