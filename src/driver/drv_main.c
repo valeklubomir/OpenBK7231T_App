@@ -238,26 +238,6 @@ OBK_Publish_Result DRV_ChannelPublish(int channel)
     return OBK_PUBLISH_WAS_NOT_REQUIRED;
 }
 
-OBK_Publish_Result DRV_ChannelPublish(int channel)
-{
-    int i;
-    //if(DRV_Mutex_Take(100)==false) {
-    //  return;
-    //}
-    for (i = 0; i < g_numDrivers; i++)
-    {
-        if (g_drivers[i].bLoaded)
-        {
-            if (g_drivers[i].ChannelPublish != 0)
-            {
-                return g_drivers[i].ChannelPublish(channel);
-            }
-        }
-    }
-    //DRV_Mutex_Free();
-    return OBK_PUBLISH_WAS_NOT_REQUIRED;
-}
-
 void DRV_StopDriver(const char* name) {
 	int i;
 

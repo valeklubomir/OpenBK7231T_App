@@ -96,7 +96,8 @@ void Test_LED_Driver_RunQuick()
  *          - !=0 - channel value updated.
  *
  */
-int Test_LED_Driver_OnChannelChanged(int ch, int value) {
+int Test_LED_Driver_OnChannelChanged(int ch, int value) 
+{
     return 0;
 }
 
