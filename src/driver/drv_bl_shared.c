@@ -685,6 +685,14 @@ void BL_Shared_Init()
     addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL_Shared_Init #5\n");
 }
 
+void BL_Shared_DeInit()
+{
+    os_free(energyCounterMinutes);
+    energyCounterMinutes = NULL;
+    energyCounterStatsEnable = false;
+    energyCounterStatsJSONEnable = false;
+}
+
 // OBK_POWER etc
 float DRV_GetReading(int type) 
 {

@@ -83,15 +83,15 @@ static driver_t g_drivers[] = {
 #endif
 
 #ifdef ENABLE_DRIVER_BL0942
-	{ "BL0942",		BL0942_Init,		BL0942_RunFrame,			BL09XX_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, NULL, false },
+	{ "BL0942",		BL0942_Init,		BL0942_RunFrame,			BL09XX_AppendInformationToHTTPIndexPage, NULL, BL_Shared_DeInit, NULL, NULL, false },
 #endif
 
 #ifdef ENABLE_DRIVER_BL0937	
-	{ "BL0937",		BL0937_Init,		BL0937_RunFrame,			BL09XX_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, NULL, false },
+	{ "BL0937",		BL0937_Init,		BL0937_RunFrame,			BL09XX_AppendInformationToHTTPIndexPage, NULL, BL0937_DeInit, NULL, NULL, false },
 #endif
 
 #ifdef ENABLE_DRIVER_CSE7766
-	{ "CSE7766",	CSE7766_Init,		CSE7766_RunFrame,			BL09XX_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, NULL, false },
+	{ "CSE7766",	CSE7766_Init,		CSE7766_RunFrame,			BL09XX_AppendInformationToHTTPIndexPage, NULL, BL_Shared_DeInit, NULL, NULL, false },
 #endif
 
 #if PLATFORM_BEKEN	

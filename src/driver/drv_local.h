@@ -10,6 +10,7 @@ void BL0942_RunFrame();
 
 void BL0937_Init();
 void BL0937_RunFrame();
+void BL0937_DeInit();
 
 void CSE7766_Init();
 void CSE7766_RunFrame();
@@ -42,6 +43,7 @@ void BP1658CJ_Init();
 void SM16703P_Init();
 
 void BL_Shared_Init();
+void BL_Shared_DeInit();
 void BL_ProcessUpdate(float voltage, float current, float power);
 void BL09XX_AppendInformationToHTTPIndexPage(http_request_t* request);
 bool DRV_IsRunning(const char* name);

@@ -136,6 +136,13 @@ void Bridge_driver_Init()
 
 }
 
+void Bridge_driver_DeInit()
+{
+    os_free(br_ctrl);
+    br_ctrl = NULL;
+    ch_count = 0;
+}
+
 /***************************************************************************************/
 void Bridge_driver_DeInit()
 {

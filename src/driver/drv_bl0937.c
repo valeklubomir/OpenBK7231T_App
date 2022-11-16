@@ -295,7 +295,20 @@ void BL0937_Init()
 	BL0937_Init_Pins();
 }
 
-void BL0937_RunFrame()
+void BL0937_DeInit()
+{
+#if PLATFORM_BEKEN
+    gpio_int_disable(GPIO_HLW_CF1);
+#else
+#endif
+#if PLATFORM_BEKEN
+    gpio_int_disable(GPIO_HLW_CF);
+#else
+#endif
+    BL_Shared_DeInit();
+}
+
+void BL0937_RunFrame() 
 {
 	float final_v;
 	float final_c;
