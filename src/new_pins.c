@@ -830,7 +830,12 @@ static void Channel_OnChanged(int ch, int prevValue, int iFlags) {
 #endif
 
 #ifndef OBK_DISABLE_ALL_DRIVERS
-    DRV_OnChannelChanged(ch,iVal);
+	if (DRV_OnChannelChanged(ch,iVal) != 0)
+    {
+        /* Channel accepted by any driver and value was updated  *
+         * MQTT value publish channel value request              */
+        bCallCb = 1;
+    }
 #endif
 
 #if ENABLE_DRIVER_TUYAMCU

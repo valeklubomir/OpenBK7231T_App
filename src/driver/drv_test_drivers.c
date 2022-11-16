@@ -79,7 +79,6 @@ void Test_LED_Driver_RunFrame()
     addLogAdv(LOG_INFO, LOG_FEATURE_DRV, "TEST_TICK: %lu\n", (unsigned long)test_tick);
 }
 
-
 void Test_LED_Driver_RunQuick()
 {
 
