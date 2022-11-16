@@ -54,6 +54,17 @@ void Test_LED_Driver_Init() {
 }
 void Test_LED_Driver_RunFrame() {
 }
+/*
+ * Test_LED_Driver_OnChannelChanged
+ *
+ * Input:
+ *  int ch - channel number
+ *  int value - new channel value
+ *
+ * Output:
+ *  int     - ==0 - channel not found
+ *          - !=0 - channel value updated.
+ */
 int Test_LED_Driver_OnChannelChanged(int ch, int value) {
     return 0;
 }
