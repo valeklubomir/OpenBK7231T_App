@@ -689,7 +689,6 @@ void BL_Shared_DeInit()
 {
     os_free(energyCounterMinutes);
     energyCounterMinutes = NULL;
-
     energyCounterStatsEnable = false;
     energyCounterStatsJSONEnable = false;
 }
