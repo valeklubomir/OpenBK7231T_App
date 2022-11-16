@@ -70,3 +70,4 @@ void Test_LED_Driver_RunFrame() {
 int Test_LED_Driver_OnChannelChanged(int ch, int value) {
     return 0;
 }
+
