@@ -106,6 +106,7 @@ void Bridge_driver_DeInit();
 void Bridge_driver_QuickFrame();
 int Bridge_driver_OnChannelChanged(int ch, int value);
 OBK_Publish_Result Bridge_driver_ChannelPublish(int channel);
+/*************************************************************/
 
 commandResult_t BL09XX_ResetEnergyCounter(const void* context, const char* cmd, const char* args, int cmdFlags);
 
