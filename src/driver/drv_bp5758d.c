@@ -172,3 +172,4 @@ void BP5758D_Init() {
 	//cmddetail:"examples":""}
     CMD_RegisterCommand("BP5758D_Current", BP5758D_Current, NULL);
 }
+

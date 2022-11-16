@@ -54,5 +54,6 @@ void Test_LED_Driver_Init() {
 }
 void Test_LED_Driver_RunFrame() {
 }
-void Test_LED_Driver_OnChannelChanged(int ch, int value) {
+int Test_LED_Driver_OnChannelChanged(int ch, int value) {
+    return 0;
 }

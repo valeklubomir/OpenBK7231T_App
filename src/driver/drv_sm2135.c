@@ -307,4 +307,3 @@ void SM2135_Init() {
     CMD_RegisterCommand("SM2135_Current", SM2135_Current, NULL);
 }
 
-

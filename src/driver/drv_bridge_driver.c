@@ -179,7 +179,7 @@ void Bridge_driver_QuickFrame()
                 br_ctrl[ch].pulseCnt = br_ctrl[ch].pulseLen;
                 HAL_PIN_SetOutputValue(br_ctrl[ch].GPIO_HLW_FWD, 1);
                 br_ctrl[ch].current_state = br_ctrl[ch].new_state;
-                MQTT_ChannelChangeCallback(br_ctrl[ch].channel, br_ctrl[ch].new_state);
+                //MQTT_ChannelChangeCallback(br_ctrl[ch].channel, br_ctrl[ch].new_state);
             }
             else if (br_ctrl[ch].current_state > br_ctrl[ch].new_state)
             {
@@ -190,16 +190,17 @@ void Bridge_driver_QuickFrame()
                 br_ctrl[ch].pulseCnt = br_ctrl[ch].pulseLen;
                 HAL_PIN_SetOutputValue(br_ctrl[ch].GPIO_HLW_REV, 1);
                 br_ctrl[ch].current_state = br_ctrl[ch].new_state;
-                MQTT_ChannelChangeCallback(br_ctrl[ch].channel, br_ctrl[ch].new_state);
+                //MQTT_ChannelChangeCallback(br_ctrl[ch].channel, br_ctrl[ch].new_state);
             }
         }
     }
 }
 
 /***************************************************************************************/
-void Bridge_driver_OnChannelChanged(int ch, int value) 
+int Bridge_driver_OnChannelChanged(int ch, int value)
 {
     int i;
+    int ch_act = 0;
 
     if (br_ctrl != NULL)
     {
@@ -209,9 +210,11 @@ void Bridge_driver_OnChannelChanged(int ch, int value)
             {
                 addLogAdv(LOG_DEBUG, LOG_FEATURE_DRV, "Bridge Driver OnChannelChanged: CH:%i VAL:%i\n", ch, value);
                 br_ctrl[i].new_state = value;
+                ch_act = 1;
             }
         }
     }
+    return ch_act;
 }
 
 /***************************************************************************************/

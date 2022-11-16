@@ -43,7 +43,7 @@ void DRV_StopDriver(const char* name);
 // right now only used by simulator
 void DRV_ShutdownAllDrivers();
 bool DRV_IsRunning(const char* name);
-void DRV_OnChannelChanged(int channel, int iVal);
+int DRV_OnChannelChanged(int channel, int iVal);
 OBK_Publish_Result DRV_ChannelPublish(int channel);
 void SM2135_Write(float* rgbcw);
 void BP5758D_Write(float* rgbcw);

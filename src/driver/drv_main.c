@@ -58,7 +58,7 @@ typedef struct driver_s {
     void (*appendInformationToHTTPIndexPage)(http_request_t* request);
     void (*runQuickTick)();
     void (*stopFunc)();
-    void (*onChannelChanged)(int ch, int val);
+    int (*onChannelChanged)(int ch, int val);
     OBK_Publish_Result (*ChannelPublish)(int ch);
     bool bLoaded;
 } driver_t;
@@ -113,10 +113,10 @@ static driver_t g_drivers[] = {
 #endif
 
 #ifdef ENABLE_DRIVER_LED
-	{ "SM2135",		SM2135_Init,		SM2135_RunFrame,			NULL, NULL, NULL, SM2135_OnChannelChanged, NULL, false },
-	{ "BP5758D",	BP5758D_Init,		BP5758D_RunFrame,			NULL, NULL, NULL, BP5758D_OnChannelChanged, NULL, false },
-	{ "BP1658CJ",	BP1658CJ_Init,		BP1658CJ_RunFrame,			NULL, NULL, NULL, BP1658CJ_OnChannelChanged, NULL, false },
-    { "SM2235",     SM2235_Init,        SM2235_RunFrame,            NULL, NULL, NULL, NULL, NULL, false },
+	{ "SM2135",		SM2135_Init,		NULL,	             		NULL, NULL, NULL, NULL, NULL, false },
+	{ "BP5758D",	BP5758D_Init,		NULL,           			NULL, NULL, NULL, NULL, NULL, false },
+	{ "BP1658CJ",	BP1658CJ_Init,		NULL,             			NULL, NULL, NULL, NULL, NULL, false },
+    { "SM2235",     SM2235_Init,        NULL,                       NULL, NULL, NULL, NULL, NULL, false },
 #endif	
 #if defined(PLATFORM_BEKEN) || defined(WINDOWS)
 	{ "CHT8305",	CHT8305_Init,		CHT8305_OnEverySecond,		CHT8305_AppendInformationToHTTPIndexPage, NULL, NULL, CHT8305_OnChannelChanged, NULL, false },
@@ -189,8 +189,9 @@ void DRV_RunQuickTick() {
     }
     DRV_Mutex_Free();
 }
-void DRV_OnChannelChanged(int channel, int iVal) {
+int DRV_OnChannelChanged(int channel, int iVal) {
     int i;
+    int ch_act = 0;
 
     //if(DRV_Mutex_Take(100)==false) {
     //  return;
@@ -198,11 +199,12 @@ void DRV_OnChannelChanged(int channel, int iVal) {
     for (i = 0; i < g_numDrivers; i++) {
         if (g_drivers[i].bLoaded) {
             if (g_drivers[i].onChannelChanged != 0) {
-                g_drivers[i].onChannelChanged(channel, iVal);
+                ch_act += g_drivers[i].onChannelChanged(channel, iVal);
             }
         }
     }
     //DRV_Mutex_Free();
+    return ch_act;
 }
 
 // right now only used by simulator

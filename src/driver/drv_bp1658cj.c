@@ -80,3 +80,4 @@ void BP1658CJ_Init() {
 	//cmddetail:"examples":""}
     CMD_RegisterCommand("BP1658CJ_Map", CMD_LEDDriver_Map, NULL);
 }
+

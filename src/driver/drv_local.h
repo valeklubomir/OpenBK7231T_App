@@ -20,25 +20,31 @@ void Test_Power_RunFrame();
 
 void Test_LED_Driver_Init();
 void Test_LED_Driver_RunFrame();
-void Test_LED_Driver_OnChannelChanged(int ch, int value);
+int Test_LED_Driver_OnChannelChanged(int ch, int value);
 
 void DRV_DGR_Init();
 void DRV_DGR_RunQuickTick();
 void DRV_DGR_RunEverySecond();
 void DRV_DGR_Shutdown();
-void DRV_DGR_OnChannelChanged(int ch, int value);
+int DRV_DGR_OnChannelChanged(int ch, int value);
 
 void DRV_DDP_Init();
 void DRV_DDP_RunFrame();
 void DRV_DDP_Shutdown();
 
 void SM2135_Init();
+void SM2135_RunFrame();
+int SM2135_OnChannelChanged(int ch, int value);
 
 void SM2235_Init();
 
 void BP5758D_Init();
+void BP5758D_RunFrame();
+int BP5758D_OnChannelChanged(int ch, int value);
 
 void BP1658CJ_Init();
+void BP1658CJ_RunFrame();
+int BP1658CJ_OnChannelChanged(int ch, int value);
 
 void SM16703P_Init();
 
@@ -98,7 +104,7 @@ void LED_I2CDriver_WriteRGBCW(float* finalRGBCW);
 void Bridge_driver_Init();
 void Bridge_driver_DeInit();
 void Bridge_driver_QuickFrame();
-void Bridge_driver_OnChannelChanged(int ch, int value);
+int Bridge_driver_OnChannelChanged(int ch, int value);
 OBK_Publish_Result Bridge_driver_ChannelPublish(int channel);
 
 commandResult_t BL09XX_ResetEnergyCounter(const void* context, const char* cmd, const char* args, int cmdFlags);

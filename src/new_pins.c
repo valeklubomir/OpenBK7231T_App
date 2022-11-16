@@ -887,6 +887,7 @@ static void Channel_OnChanged(int ch, int prevValue, int iFlags) {
 
     Channel_SaveInFlashIfNeeded(ch);
 }
+
 void CFG_ApplyChannelStartValues() {
     int i;
     for(i = 0; i < CHANNEL_MAX; i++) {

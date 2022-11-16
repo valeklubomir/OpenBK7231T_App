@@ -744,25 +744,26 @@ void DRV_DGR_OnLedEnableAllChange(int iVal) {
 	DRV_DGR_Send_Power(CFG_DeviceGroups_GetName(), iVal, 1);
 #endif
 }
-void DRV_DGR_OnChannelChanged(int ch, int value) {
+int DRV_DGR_OnChannelChanged(int ch, int value) {
 	int channelValues;
 	int channelsCount;
 	int i;
 	const char *groupName;
 	int firstChannelOffset;
+    int ch_act = 0;
 
 	if(g_dgr_socket_receive==0) {
-		return;
+		return 0;
 	}
 	// if this send is as a result of use RXing something, 
 	// don't send it....
 	if (g_inCmdProcessing){
-		return;
+		return 0;
 	}
 
 	if((CFG_DeviceGroups_GetSendFlags() & DGR_SHARE_POWER)==0) {
 
-		return;
+		return 0;
 	}
 	channelValues = 0;
 	channelsCount = 0;
@@ -791,11 +792,11 @@ void DRV_DGR_OnChannelChanged(int ch, int value) {
 	}
 	if(channelsCount>0){
 		DRV_DGR_Send_Power(groupName,channelValues,channelsCount);
+        ch_act = 1;
 	}
-
-
-	
+    return ch_act;
 }
+
 // DGR_SendBrightness roomLEDstrips 128
 // DGR_SendBrightness stringGroupName integerBrightness
 commandResult_t CMD_DGR_SendBrightness(const void *context, const char *cmd, const char *args, int flags) {
