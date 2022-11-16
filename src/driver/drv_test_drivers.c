@@ -94,6 +94,7 @@ void Test_LED_Driver_RunQuick()
  * Output:
  *  int     - ==0 - channel not found
  *          - !=0 - channel value updated.
+ *
  */
 int Test_LED_Driver_OnChannelChanged(int ch, int value) {
     return 0;
