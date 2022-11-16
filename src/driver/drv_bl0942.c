@@ -107,6 +107,7 @@ int BL0942_TryToGetNextBL0942Packet() {
 		power = (raw_unscaled_power / BL0942_PREF);
 		voltage = (raw_unscaled_voltage / BL0942_UREF);
 		current = (raw_unscaled_current / BL0942_IREF);
+
         addLogAdv(LOG_INFO, LOG_FEATURE_ENERGYMETER,"Real current %1.3lf, voltage %1.1lf, power %1.1lf\n", current, voltage, power);
 
         /* Logical check of values */
@@ -246,20 +247,25 @@ void BL0942_Init()
 {
     BL_Shared_Init();
 
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL0942::Configuration parameters\n");
 	// UPDATE: now they are automatically saved
-	BL0942_UREF = CFG_GetPowerMeasurementCalibrationFloat(CFG_OBK_VOLTAGE,BL0942_UREF);
-	BL0942_PREF = CFG_GetPowerMeasurementCalibrationFloat(CFG_OBK_POWER,BL0942_PREF);
-	BL0942_IREF = CFG_GetPowerMeasurementCalibrationFloat(CFG_OBK_CURRENT,BL0942_IREF);    
+	BL0942_UREF = CFG_GetPowerMeasurementCalibrationFloat(CFG_OBK_VOLTAGE, BL0942_UREF);
+	BL0942_PREF = CFG_GetPowerMeasurementCalibrationFloat(CFG_OBK_POWER, BL0942_PREF);
+	BL0942_IREF = CFG_GetPowerMeasurementCalibrationFloat(CFG_OBK_CURRENT, BL0942_IREF);
 
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL0942::Setup UART\n");
 	UART_InitUART(BL0942_BAUD_RATE);
 	UART_InitReceiveRingBuffer(256);
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL0942::Command regiustrations\n");
 	CMD_RegisterCommand("PowerSet",BL0942_PowerSet, NULL);
 	CMD_RegisterCommand("VoltageSet",BL0942_VoltageSet, NULL);
 	CMD_RegisterCommand("CurrentSet",BL0942_CurrentSet, NULL);
 	CMD_RegisterCommand("PREF",BL0942_PowerRef, NULL);
 	CMD_RegisterCommand("VREF",BL0942_VoltageRef, NULL);
 	CMD_RegisterCommand("IREF",BL0942_CurrentRef, NULL);
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER, "BL0942::Init Complete\n");
 }
+
 void BL0942_RunFrame() {
 	int len;
 

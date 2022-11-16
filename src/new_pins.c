@@ -559,6 +559,18 @@ void PIN_SetPinRoleForPinIndex(int index, int role) {
     if(index == PIN_UART2_TXD) {
         // default role to None in order to fix broken config
         role = IOR_None;
+	}
+#endif
+
+#ifdef PLATFORM_BEKEN
+    if ((index == PIN_UART1_RXD) || (index == PIN_UART1_TXD))
+    {
+        if (g_cfg.pins.roles[index] != IOR_None)
+        {
+            uart1_close();
+            intc_disable(IRQ_UART1);
+            addLogAdv(LOG_INFO, LOG_FEATURE_GENERAL,"UART Pin used as button, UART1 CLOSE.\r\n");
+        }
     }
 #endif
     if (g_enable_pins) {
