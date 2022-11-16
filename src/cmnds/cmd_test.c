@@ -188,7 +188,6 @@ static commandResult_t testJSON(const void * context, const char *cmd, const cha
     return CMD_RES_OK;
 }
 
-
 // Usage for continous test: addRepeatingEvent 1 -1 lfs_test1 ir.bat
 static commandResult_t cmnd_lfs_test1(const void * context, const char *cmd, const char *args, int cmdFlags) {
 #ifdef ENABLE_LITTLEFS
