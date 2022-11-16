@@ -1068,6 +1068,12 @@ void Main_Init_Before_Delay()
 	// why is it called IRDA??  is this where they check for IR?
 	bg_register_irda_check_func(isidle);
 #endif
+    if((PIN_FindPinIndexForRole(IOR_BridgeForward, -1) != -1) && (PIN_FindPinIndexForRole(IOR_BridgeReverse, -1) != -1))
+    {
+#ifndef OBK_DISABLE_ALL_DRIVERS
+        DRV_StartDriver("BridgeDRV");
+#endif
+    }
 
 	g_bootFailures = HAL_FlashVars_GetBootFailures();
 	if (g_bootFailures > RESTARTS_REQUIRED_FOR_SAFE_MODE)

@@ -1,6 +1,9 @@
+#ifndef __DRV_LOCAL_H__
+#define __DRV_LOCAL_H__
 
 #include "../httpserver/new_http.h"
 #include "../cmnds/cmd_public.h"
+#include "../mqtt/new_mqtt.h"
 
 void BL0942_Init();
 void BL0942_RunFrame();
@@ -50,7 +53,6 @@ void DGR_SpoofNextDGRPacketSource(const char* ipStrs);
 void TuyaMCU_Sensor_RunFrame();
 void TuyaMCU_Sensor_Init();
 
-
 void DRV_Toggler_ProcessChanges(http_request_t* request);
 void DRV_Toggler_AddToHtmlPage(http_request_t* request);
 void DRV_Toggler_AppendInformationToHTTPIndexPage(http_request_t* request);
@@ -96,5 +98,8 @@ void Bridge_driver_DeInit();
 void Bridge_driver_QuickFrame();
 void Bridge_driver_OnChannelChanged(int ch, int value);
 OBK_Publish_Result Bridge_driver_ChannelPublish(int channel);
-/*************************************************************/
+
+commandResult_t BL09XX_ResetEnergyCounter(const void* context, const char* cmd, const char* args, int cmdFlags);
+
+#endif /* __DRV_LOCAL_H__ */
 

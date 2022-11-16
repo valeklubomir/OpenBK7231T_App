@@ -80,6 +80,8 @@ enum IORole {
 
 	IOR_SM2235_DAT,
 	IOR_SM2235_CLK,
+    IOR_BridgeForward,
+    IOR_BridgeReverse,
 
     IOR_BridgeForward,
     IOR_BridgeReverse,

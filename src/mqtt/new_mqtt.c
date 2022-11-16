@@ -1806,8 +1806,7 @@ OBK_Publish_Result MQTT_DoItemPublish(int idx)
 	if (bWantsToPublish) {
 		return MQTT_ChannelPublish(g_publishItemIndex, OBK_PUBLISH_FLAG_MUTEX_SILENT);
 	}
-
-	return OBK_PUBLISH_WAS_NOT_REQUIRED; // didnt publish
+    return DRV_ChannelPublish(idx);
 }
 
 // from 5ms quicktick

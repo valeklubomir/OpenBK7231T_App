@@ -2,6 +2,7 @@
 #define __DRV_PUBLIC_H__
 
 #include "../httpserver/new_http.h"
+#include "../mqtt/new_mqtt.h"
 
 enum {
 	OBK_VOLTAGE, // must match order in cmd_public.h
@@ -43,6 +44,7 @@ void DRV_StopDriver(const char* name);
 void DRV_ShutdownAllDrivers();
 bool DRV_IsRunning(const char* name);
 void DRV_OnChannelChanged(int channel, int iVal);
+OBK_Publish_Result DRV_ChannelPublish(int channel);
 void SM2135_Write(float* rgbcw);
 void BP5758D_Write(float* rgbcw);
 void BP1658CJ_Write(float* rgbcw);

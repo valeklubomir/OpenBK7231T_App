@@ -59,6 +59,7 @@ typedef struct driver_s {
     void (*runQuickTick)();
     void (*stopFunc)();
     void (*onChannelChanged)(int ch, int val);
+    OBK_Publish_Result (*ChannelPublish)(int ch);
     bool bLoaded;
 } driver_t;
 
@@ -67,62 +68,62 @@ typedef struct driver_s {
 static driver_t g_drivers[] = {
 
 #ifdef ENABLE_DRIVER_TUYAMCU
-	{ "TuyaMCU",	TuyaMCU_Init,		TuyaMCU_RunFrame,			NULL, NULL, NULL, NULL, false },
-	{ "tmSensor",	TuyaMCU_Sensor_Init, TuyaMCU_Sensor_RunFrame,	NULL, NULL, NULL, NULL, false },
+	{ "TuyaMCU",	TuyaMCU_Init,		TuyaMCU_RunFrame,			NULL, NULL, NULL, NULL, NULL, false },
+	{ "tmSensor",	TuyaMCU_Sensor_Init, TuyaMCU_Sensor_RunFrame,	NULL, NULL, NULL, NULL, NULL, false },
 #endif
 #ifdef ENABLE_BASIC_DRIVERS
-	{ "NTP",		NTP_Init,			NTP_OnEverySecond,			NTP_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, false },
-	{ "TESTPOWER",	Test_Power_Init,	 Test_Power_RunFrame,		BL09XX_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, false },
-	{ "TESTLED",	Test_LED_Driver_Init, Test_LED_Driver_RunFrame, NULL, NULL, NULL, Test_LED_Driver_OnChannelChanged, false },
+	{ "NTP",		NTP_Init,			NTP_OnEverySecond,			NTP_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, NULL, false },
+	{ "TESTPOWER",	Test_Power_Init,	 Test_Power_RunFrame,		BL09XX_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, NULL, false },
+	{ "TESTLED",	Test_LED_Driver_Init, Test_LED_Driver_RunFrame, NULL, NULL, NULL, Test_LED_Driver_OnChannelChanged, NULL, false },
 	{ "HTTPButtons",	DRV_InitHTTPButtons, NULL, NULL, NULL, NULL, NULL, false },
 #endif
 
 #if ENABLE_I2C
-	{ "I2C",		DRV_I2C_Init,		DRV_I2C_EverySecond,		NULL, NULL, NULL, NULL, false },
+	{ "I2C",		DRV_I2C_Init,		DRV_I2C_EverySecond,		NULL, NULL, NULL, NULL, NULL, false },
 #endif
 
 #ifdef ENABLE_DRIVER_BL0942
-	{ "BL0942",		BL0942_Init,		BL0942_RunFrame,			BL09XX_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, false },
+	{ "BL0942",		BL0942_Init,		BL0942_RunFrame,			BL09XX_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, NULL, false },
 #endif
 
 #ifdef ENABLE_DRIVER_BL0937	
-	{ "BL0937",		BL0937_Init,		BL0937_RunFrame,			BL09XX_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, false },
+	{ "BL0937",		BL0937_Init,		BL0937_RunFrame,			BL09XX_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, NULL, false },
 #endif
 
 #ifdef ENABLE_DRIVER_CSE7766
-	{ "CSE7766",	CSE7766_Init,		CSE7766_RunFrame,			BL09XX_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, false },
+	{ "CSE7766",	CSE7766_Init,		CSE7766_RunFrame,			BL09XX_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, NULL, false },
 #endif
 
 #if PLATFORM_BEKEN	
-	{ "SM16703P",	SM16703P_Init,		NULL,						NULL, NULL, NULL, NULL, false },
-	{ "IR",			DRV_IR_Init,		 NULL,						NULL, DRV_IR_RunFrame, NULL, NULL, false },
+	{ "SM16703P",	SM16703P_Init,		NULL,						NULL, NULL, NULL, NULL, NULL, false },
+	{ "IR",			DRV_IR_Init,		 NULL,						NULL, DRV_IR_RunFrame, NULL, NULL, NULL, false },
 #endif
 #if defined(PLATFORM_BEKEN) || defined(WINDOWS)	
-	{ "DDP",		DRV_DDP_Init,		NULL,						NULL, DRV_DDP_RunFrame, DRV_DDP_Shutdown, NULL, false },
-	{ "SSDP",		DRV_SSDP_Init,		DRV_SSDP_RunEverySecond,	NULL, DRV_SSDP_RunQuickTick, DRV_SSDP_Shutdown, NULL, false },
-	{ "Wemo",		WEMO_Init,		NULL,		WEMO_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, false },
-	{ "PWMToggler",	DRV_InitPWMToggler, NULL, DRV_Toggler_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, false },
-	{ "DGR",		DRV_DGR_Init,		DRV_DGR_RunEverySecond,		NULL, DRV_DGR_RunQuickTick, DRV_DGR_Shutdown, DRV_DGR_OnChannelChanged, false },
-	{ "DDP",		DRV_DDP_Init,		  NULL,						NULL, DRV_DDP_RunFrame, DRV_DDP_Shutdown, NULL, false },
-	{ "SSDP",		DRV_SSDP_Init,		  DRV_SSDP_RunEverySecond,	NULL, DRV_SSDP_RunQuickTick, DRV_SSDP_Shutdown, NULL, false },
+	{ "DDP",		DRV_DDP_Init,		NULL,						NULL, DRV_DDP_RunFrame, DRV_DDP_Shutdown, NULL, NULL, false },
+	{ "SSDP",		DRV_SSDP_Init,		DRV_SSDP_RunEverySecond,	NULL, DRV_SSDP_RunQuickTick, DRV_SSDP_Shutdown, NULL, NULL, false },
+    { "Wemo",       WEMO_Init,          NULL,                       WEMO_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, NULL, false },
+	{ "PWMToggler",	DRV_InitPWMToggler, NULL, DRV_Toggler_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, NULL, false },
+	{ "DGR",		DRV_DGR_Init,		DRV_DGR_RunEverySecond,		NULL, DRV_DGR_RunQuickTick, DRV_DGR_Shutdown, DRV_DGR_OnChannelChanged, NULL, false },
+	{ "DDP",		DRV_DDP_Init,		  NULL,						NULL, DRV_DDP_RunFrame, DRV_DDP_Shutdown, NULL, NULL, false },
+	{ "SSDP",		DRV_SSDP_Init,		  DRV_SSDP_RunEverySecond,	NULL, DRV_SSDP_RunQuickTick, DRV_SSDP_Shutdown, NULL, NULL, false },
 #endif
 #if defined(PLATFORM_BEKEN) || defined(WINDOWS)
-	{ "PWMToggler",	DRV_InitPWMToggler,   NULL,                     DRV_Toggler_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, false },
-    { "DGR",        DRV_DGR_Init,         DRV_DGR_RunEverySecond,   NULL,                                    DRV_DGR_RunQuickTick,  DRV_DGR_Shutdown,  DRV_DGR_OnChannelChanged, false },
+	{ "PWMToggler",	DRV_InitPWMToggler,   NULL,                     DRV_Toggler_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, NULL, false },
+    { "DGR",        DRV_DGR_Init,         DRV_DGR_RunEverySecond,   NULL, DRV_DGR_RunQuickTick,  DRV_DGR_Shutdown,  DRV_DGR_OnChannelChanged, NULL, false },
 #endif
 
 #ifdef ENABLE_DRIVER_LED
-	{ "SM2135",		SM2135_Init,		NULL,			NULL, NULL, NULL, NULL, false },
-	{ "BP5758D",	BP5758D_Init,		NULL,			NULL, NULL, NULL, NULL, false },
-	{ "BP1658CJ",	BP1658CJ_Init,		NULL,			NULL, NULL, NULL, NULL, false },
-	{ "SM2235",		SM2235_Init,		NULL,			NULL, NULL, NULL, NULL, false },
+	{ "SM2135",		SM2135_Init,		SM2135_RunFrame,			NULL, NULL, NULL, SM2135_OnChannelChanged, NULL, false },
+	{ "BP5758D",	BP5758D_Init,		BP5758D_RunFrame,			NULL, NULL, NULL, BP5758D_OnChannelChanged, NULL, false },
+	{ "BP1658CJ",	BP1658CJ_Init,		BP1658CJ_RunFrame,			NULL, NULL, NULL, BP1658CJ_OnChannelChanged, NULL, false },
+    { "SM2235",     SM2235_Init,        SM2235_RunFrame,            NULL, NULL, NULL, NULL, NULL, false },
 #endif	
 #if defined(PLATFORM_BEKEN) || defined(WINDOWS)
-	{ "CHT8305",	CHT8305_Init,		CHT8305_OnEverySecond,		CHT8305_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, false },
-	{ "MAX72XX",	DRV_MAX72XX_Init,		NULL,		NULL, NULL, NULL, NULL, false },
-	{ "SHT3X",	    SHT3X_Init,		NULL,		SHT3X_AppendInformationToHTTPIndexPage, NULL, SHT3X_StopDriver, NULL, false },
+	{ "CHT8305",	CHT8305_Init,		CHT8305_OnEverySecond,		CHT8305_AppendInformationToHTTPIndexPage, NULL, NULL, CHT8305_OnChannelChanged, NULL, false },
+	{ "MAX72XX",	DRV_MAX72XX_Init,	NULL,		                NULL, NULL, NULL, NULL, NULL, false },
+	{ "SHT3X",	    SHT3X_Init,	        SHT3X_OnEverySecond,		SHT3X_AppendInformationToHTTPIndexPage, NULL, SHT3X_StopDriver, SHT3X_OnChannelChanged, NULL, false },
 #endif
-    { "Bridge",     Bridge_driver_Init, NULL,                       NULL, Bridge_driver_QuickFrame, Bridge_driver_DeInit, Bridge_driver_OnChannelChanged, false }
+    { "Bridge",     Bridge_driver_Init, NULL,                       NULL, Bridge_driver_QuickFrame, Bridge_driver_DeInit, Bridge_driver_OnChannelChanged, Bridge_driver_ChannelPublish, false }
 };
 
 static const int g_numDrivers = sizeof(g_drivers) / sizeof(g_drivers[0]);
@@ -203,6 +204,7 @@ void DRV_OnChannelChanged(int channel, int iVal) {
     }
     //DRV_Mutex_Free();
 }
+
 // right now only used by simulator
 void DRV_ShutdownAllDrivers() {
 	int i;
@@ -212,6 +214,27 @@ void DRV_ShutdownAllDrivers() {
 		}
 	}
 }
+
+OBK_Publish_Result DRV_ChannelPublish(int channel)
+{
+    int i;
+    //if(DRV_Mutex_Take(100)==false) {
+    //  return;
+    //}
+    for (i = 0; i < g_numDrivers; i++)
+    {
+        if (g_drivers[i].bLoaded)
+        {
+            if (g_drivers[i].ChannelPublish != 0)
+            {
+                return g_drivers[i].ChannelPublish(channel);
+            }
+        }
+    }
+    //DRV_Mutex_Free();
+    return OBK_PUBLISH_WAS_NOT_REQUIRED;
+}
+
 void DRV_StopDriver(const char* name) {
 	int i;
 
@@ -247,7 +270,7 @@ void DRV_StartDriver(const char* name) {
     for (i = 0; i < g_numDrivers; i++) {
         if (!stricmp(g_drivers[i].name, name)) {
             if (g_drivers[i].bLoaded) {
-                addLogAdv(LOG_INFO, LOG_FEATURE_NTP, "Drv %s is already loaded.\n", name);
+                addLogAdv(LOG_INFO, LOG_FEATURE_DRV, "Drv %s is already loaded.\n", name);
                 bStarted = 1;
                 break;
 
@@ -255,21 +278,21 @@ void DRV_StartDriver(const char* name) {
             else {
                 g_drivers[i].initFunc();
                 g_drivers[i].bLoaded = true;
-                addLogAdv(LOG_INFO, LOG_FEATURE_NTP, "Started %s.\n", name);
+                addLogAdv(LOG_INFO, LOG_FEATURE_DRV, "Started %s.\n", name);
                 bStarted = 1;
                 break;
             }
         }
     }
     if (!bStarted) {
-        addLogAdv(LOG_INFO, LOG_FEATURE_NTP, "Driver %s is not known in this build.\n", name);
-        addLogAdv(LOG_INFO, LOG_FEATURE_NTP, "Available drivers: ");
+        addLogAdv(LOG_INFO, LOG_FEATURE_DRV, "Driver %s is not known in this build.\n", name);
+        addLogAdv(LOG_INFO, LOG_FEATURE_DRV, "Available drivers: ");
         for (i = 0; i < g_numDrivers; i++) {
             if (i == 0) {
-                addLogAdv(LOG_INFO, LOG_FEATURE_NTP, "%s", g_drivers[i].name);
+                addLogAdv(LOG_INFO, LOG_FEATURE_DRV, "%s", g_drivers[i].name);
             }
             else {
-                addLogAdv(LOG_INFO, LOG_FEATURE_NTP, ", %s", g_drivers[i].name);
+                addLogAdv(LOG_INFO, LOG_FEATURE_DRV, ", %s", g_drivers[i].name);
             }
         }
     }
