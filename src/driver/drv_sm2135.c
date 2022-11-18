@@ -12,6 +12,8 @@
 
 #include "drv_sm2135.h"
 
+void usleep(int us);
+
 // Some platforms have less pins than BK7231T.
 // For example, BL602 doesn't have pin number 26.
 // The pin code would crash BL602 while trying to access pin 26.
