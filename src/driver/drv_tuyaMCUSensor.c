@@ -13,7 +13,7 @@
 
 static int g_elapsedTime = 0;
 static int g_hadMQTT = 0;
-static int g_delay_between_publishes = 10;
+//static int g_delay_between_publishes = 10;
 static int g_cur_delay_publish = 0;
 
 static byte g_hello[] =  { 0x55, 0xAA, 0x00, 0x01, 0x00, 0x00, 0x00 };
