@@ -104,8 +104,8 @@ static driver_t g_drivers[] = {
     { "Wemo",       WEMO_Init,          NULL,                       WEMO_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, NULL, false },
 	{ "PWMToggler",	DRV_InitPWMToggler, NULL, DRV_Toggler_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, NULL, false },
 	{ "DGR",		DRV_DGR_Init,		DRV_DGR_RunEverySecond,		NULL, DRV_DGR_RunQuickTick, DRV_DGR_Shutdown, DRV_DGR_OnChannelChanged, NULL, false },
-	{ "DDP",		DRV_DDP_Init,		  NULL,						NULL, DRV_DDP_RunFrame, DRV_DDP_Shutdown, NULL, NULL, false },
-	{ "SSDP",		DRV_SSDP_Init,		  DRV_SSDP_RunEverySecond,	NULL, DRV_SSDP_RunQuickTick, DRV_SSDP_Shutdown, NULL, NULL, false },
+	{ "DDP",		DRV_DDP_Init,		NULL,						NULL, DRV_DDP_RunFrame, DRV_DDP_Shutdown, NULL, NULL, false },
+	{ "SSDP",		DRV_SSDP_Init,		DRV_SSDP_RunEverySecond,	NULL, DRV_SSDP_RunQuickTick, DRV_SSDP_Shutdown, NULL, NULL, false },
 #endif
 #if defined(PLATFORM_BEKEN) || defined(WINDOWS)
 	{ "PWMToggler",	DRV_InitPWMToggler,   NULL,                     DRV_Toggler_AppendInformationToHTTPIndexPage, NULL, NULL, NULL, NULL, false },
