@@ -8,6 +8,7 @@
 #include "../driver/drv_uart.h"
 #include "../driver/drv_public.h"
 #include "../hal/hal_adc.h"
+#include "../memory/memtest.h"
 
 #ifdef ENABLE_LITTLEFS
 #include "../littlefs/our_lfs.h"

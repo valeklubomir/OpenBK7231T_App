@@ -171,6 +171,9 @@ typedef struct A_BLOCK_LINK
     register uint32_t calleraddr = 0; \
     __asm volatile ("MOV %0, LR\n" : "=r" (calleraddr) ); 
 
+int CrashMalloc();
+int stackCrash(int level);
+
 #else 
 
 // non-beken
@@ -181,3 +184,4 @@ typedef struct A_BLOCK_LINK
     uint32_t calleraddr = 0;
 
 #endif // en if T
+
