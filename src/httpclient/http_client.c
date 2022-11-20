@@ -14,6 +14,7 @@
 #include "http_client.h"
 #include "rtos_pub.h"
 #include "../logging/logging.h"
+#include "../cmnds/cmd_public.h"
 
 #include "iot_export_errno.h"
 
@@ -1178,7 +1179,7 @@ int HTTPClient_Async_SendGet(const char *url_in){
 #else
 	// OBK UPDATE: use our own strdup which expands constants
 	// So $CH5 gets changed to channel value integer, etc...
-	url = CMD_ExpandingStrdup(url_in);
+	url = (char*)CMD_ExpandingStrdup(url_in);
 	//url = strdup(url_in);
 #endif
 	if(url==0) {

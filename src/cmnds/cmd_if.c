@@ -121,26 +121,26 @@ const char *strCompareBound(const char *s, const char *templ, const char *stoppe
 			return 0;
 		}
 		// are the chars the same?
-		if(bAllowWildCard && *templ == '*') {
-			if (isdigit((int)(*s))) {
-
+		if(bAllowWildCard && *templ == '*') 
+        {
+			if (isdigit(((int)(*s)))) 
+            {
+			} else {
+                return 0;
 			}
-			else {
-			return 0;
-			}
-		}
- else {
- char c1 = tolower((unsigned char)*s);
- char c2 = tolower((unsigned char)*templ);
- if (c1 != c2) {
-	 return 0;
- }
+		} else {
+            char c1 = tolower((unsigned char)*s);
+            char c2 = tolower((unsigned char)*templ);
+            if (c1 != c2) {
+                return 0;
+            }
 		}
 		s++;
 		templ++;
 	}
 	return 0;
 }
+
 char *g_expDebugBuffer = 0;
 #define EXPRESSION_DEBUG_BUFFER_SIZE 128
 
