@@ -253,10 +253,11 @@ void RAW_SetPinValue(int index, int iVal){
         HAL_PIN_SetOutputValue(index, iVal);
     }
 }
+
 void Button_OnPressRelease(int index) {
 	// fire event - button on pin <index> was released
-    addLogAdv(LOG_INFO, LOG_FEATURE_GENERAL,"%i Button_OnPressRelease\r\n", index);
-	EventHandlers_FireEvent(CMD_EVENT_PIN_ONRELEASE, index);
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_GENERAL,"%i Button_OnPressRelease\r\n", index);
+	EventHandlers_FireEvent(CMD_EVENT_PIN_ONRELEASE,index);
 }
 
 void Button_OnInitialPressDown(int index)
@@ -373,9 +374,9 @@ void Button_OnQuadrupleClick(int index)
     EventHandlers_FireEvent(CMD_EVENT_PIN_ON4CLICK, index);
 }
 void Button_OnLongPressHold(int index) {
-    addLogAdv(LOG_INFO, LOG_FEATURE_GENERAL,"%i Button_OnLongPressHold\r\n", index);
-    // fire event - button on pin <index> was held
-    EventHandlers_FireEvent(CMD_EVENT_PIN_ONHOLD,index);
+	addLogAdv(LOG_DEBUG, LOG_FEATURE_GENERAL,"%i Button_OnLongPressHold\r\n", index);
+	// fire event - button on pin <index> was held
+	EventHandlers_FireEvent(CMD_EVENT_PIN_ONHOLD, index);
 
     if(g_cfg.pins.roles[index] == IOR_Button_NextDimmer || g_cfg.pins.roles[index] == IOR_Button_NextDimmer_n){
         LED_NextDimmerHold();
@@ -385,9 +386,9 @@ void Button_OnLongPressHold(int index) {
     }
 }
 void Button_OnLongPressHoldStart(int index) {
-    addLogAdv(LOG_INFO, LOG_FEATURE_GENERAL,"%i Button_OnLongPressHoldStart\r\n", index);
-    // fire event - button on pin <index> was held
-    EventHandlers_FireEvent(CMD_EVENT_PIN_ONHOLDSTART,index);
+	addLogAdv(LOG_DEBUG, LOG_FEATURE_GENERAL,"%i Button_OnLongPressHoldStart\r\n", index);
+	// fire event - button on pin <index> was held
+	EventHandlers_FireEvent(CMD_EVENT_PIN_ONHOLDSTART, index);
 }
 
 bool BTN_ShouldInvert(int index) {

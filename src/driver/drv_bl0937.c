@@ -371,7 +371,7 @@ void BL0937_RunFrame()
 #endif
 
 	pulseStamp = xTaskGetTickCount();
-	addLogAdv(LOG_INFO, LOG_FEATURE_ENERGYMETER,"Voltage pulses %i, current %i, power %i\n", res_v, res_c, res_p);
+	addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER,"Voltage pulses %i, current %i, power %i\n", res_v, res_c, res_p);
 
 	final_v = res_v * BL0937_VREF;
 	final_v *= (float)ticksElapsed;

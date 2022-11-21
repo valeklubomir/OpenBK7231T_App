@@ -80,7 +80,7 @@ int BL0942_TryToGetNextBL0942Packet() {
 			snprintf(buffer2, sizeof(buffer2), "%02X ",UART_GetNextByte(i));
 			strcat_safe(buffer_for_log,buffer2,sizeof(buffer_for_log));
 		}
-		addLogAdv(LOG_INFO, LOG_FEATURE_ENERGYMETER,"BL0942 received: %s\n", buffer_for_log);
+		addLogAdv(LOG_DEBUG, LOG_FEATURE_ENERGYMETER,"BL0942 received: %s\n", buffer_for_log);
 	}
 #endif
 	if(checksum != UART_GetNextByte(BL0942_PACKET_LEN-1)) {
@@ -143,6 +143,7 @@ void BL0942_SendRequest() {
 	UART_SendByte(BL0942_READ_COMMAND);
 	UART_SendByte(0xAA);
 }
+
 commandResult_t BL0942_PowerSet(const void *context, const char *cmd, const char *args, int cmdFlags) {
 	float realPower;
 
