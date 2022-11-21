@@ -598,19 +598,26 @@ void CFG_InitAndLoad() {
 	if(g_cfg.buttonHoldRepeat == 0) {
 		// default value is 5, which means 500ms
 		g_cfg.buttonHoldRepeat = CFG_DEFAULT_BTN_REPEAT;
-	}
+	} else if(g_cfg.buttonHoldRepeat >= 128) {
+        g_cfg.buttonHoldRepeat = CFG_DEFAULT_BTN_REPEAT;
+    }
 	if(g_cfg.buttonShortPress == 0) {
 		// default value is 3, which means 300ms
 		g_cfg.buttonShortPress = CFG_DEFAULT_BTN_SHORT;
-	}
+	} else if (g_cfg.buttonShortPress >= 20) {
+        g_cfg.buttonShortPress = CFG_DEFAULT_BTN_SHORT;
+    }
 	if(g_cfg.buttonLongPress == 0) {
 		// default value is 3, which means 100ms
 		g_cfg.buttonLongPress = CFG_DEFAULT_BTN_LONG;
+    } else if(g_cfg.buttonLongPress >= 128) {
+        g_cfg.buttonLongPress = CFG_DEFAULT_BTN_LONG;
 	}
 	// convert to new version - add missing table
 	if (CFG_HasValidLEDCorrectionTable() == false) {
 		CFG_SetDefaultLEDCorrectionTable();
 	}
+
 	g_configInitialized = 1;
 	CFG_Save_IfThereArePendingChanges();
 }

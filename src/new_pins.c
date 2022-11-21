@@ -254,9 +254,11 @@ void RAW_SetPinValue(int index, int iVal){
     }
 }
 void Button_OnPressRelease(int index) {
-    // fire event - button on pin <index> was released
-    EventHandlers_FireEvent(CMD_EVENT_PIN_ONRELEASE,index);
+	// fire event - button on pin <index> was released
+    addLogAdv(LOG_INFO, LOG_FEATURE_GENERAL,"%i Button_OnPressRelease\r\n", index);
+	EventHandlers_FireEvent(CMD_EVENT_PIN_ONRELEASE, index);
 }
+
 void Button_OnInitialPressDown(int index)
 {
     addLogAdv(LOG_INFO, LOG_FEATURE_GENERAL,"%i Button_OnInitialPressDown\r\n", index);
@@ -1345,7 +1347,7 @@ void PIN_set_wifi_led(int value){
 }
 
 static uint32_t g_time = 0;
-static uint32_t g_last_time = 0;
+static volatile uint32_t g_last_time = 0;
 static int activepoll_time = 0; // time to keep polling active until
 
 //  background ticks, timer repeat invoking interval defined by PIN_TMR_DURATION.
@@ -1359,16 +1361,28 @@ void PIN_ticks(void* param)
 #else
     g_time += PIN_TMR_DURATION;
 #endif
-    uint32_t t_diff = g_time - g_last_time;
-    // cope with wrap
-    if (t_diff > 0x4000){
-        t_diff = ((g_time + 0x4000) - (g_last_time + 0x4000));
+	uint32_t t_diff;
+	//uint32_t t_diff = g_last_time - g_time;
+	// cope with wrap
+	//if (t_diff > 0x4000){
+	//	t_diff = ((g_last_time + 0x4000) - (g_time + 0x4000));
+	//}
+    if (g_time < g_last_time)
+    { 
+        t_diff = 0xFFFFFFFFUL - g_last_time;   // ms till crossing
+        t_diff += g_time;                      // ms after crossing
+    } else {
+        t_diff = g_time - g_last_time;
     }
-    g_last_time = g_time;
+	g_last_time = g_time;
 
-    BTN_SHORT_MS = (g_cfg.buttonShortPress * 100);
-    BTN_LONG_MS = (g_cfg.buttonLongPress * 100);
-    BTN_HOLD_REPEAT_MS = (g_cfg.buttonHoldRepeat * 100);
+//	BTN_SHORT_TICKS = (g_cfg.buttonShortPress * 100 / PIN_TMR_DURATION);
+//	BTN_LONG_TICKS = (g_cfg.buttonLongPress * 100 / PIN_TMR_DURATION);
+//	BTN_HOLD_REPEAT_TICKS = (g_cfg.buttonHoldRepeat * 100 / PIN_TMR_DURATION);
+
+	BTN_SHORT_MS = (g_cfg.buttonShortPress * 100);
+	BTN_LONG_MS = (g_cfg.buttonLongPress * 100);
+	BTN_HOLD_REPEAT_MS = (g_cfg.buttonHoldRepeat * 100);
 
     int debounceMS;
     if (CFG_HasFlag(OBK_FLAG_BTN_INSTANTTOUCH)) {
