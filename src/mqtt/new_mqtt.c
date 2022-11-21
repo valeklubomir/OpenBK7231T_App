@@ -1422,7 +1422,7 @@ typedef struct BENCHMARK_TEST_INFO
 void MQTT_Test_Tick(void* param)
 {
 	BENCHMARK_TEST_INFO* info = (BENCHMARK_TEST_INFO*)param;
-	int block = 1;
+	int block = 2;
 	err_t err;
 	int qos = 2;
 	int retain = 0;
@@ -1549,12 +1549,14 @@ commandResult_t MQTT_StartMQTTTestThread(const void* context, const char* cmd, c
 		info->TestStartTick = xTaskGetTickCount();
 		info->msg_cnt = 0;
 		info->report_published = false;
+        addLogAdv(LOG_INFO, LOG_FEATURE_MAIN, "Benchmark test already started. Restarting....\n\r");
 		return CMD_RES_OK;
 	}
 
 	info = (BENCHMARK_TEST_INFO*)os_malloc(sizeof(BENCHMARK_TEST_INFO));
 	if (info == NULL)
 	{
+        addLogAdv(LOG_ERROR, LOG_FEATURE_MAIN, "Benchmark test allocation failed.\n\r");
 		return CMD_RES_ERROR;
 	}
 
@@ -1584,6 +1586,7 @@ commandResult_t MQTT_StartMQTTTestThread(const void* context, const char* cmd, c
 	ASSERT(kNoErr == result);
 	result = rtos_start_timer(&g_mqtt_timer);
 	ASSERT(kNoErr == result);
+    addLogAdv(LOG_INFO, LOG_FEATURE_MAIN, "Benchmark test started.\n\r");
 #endif
 	return CMD_RES_OK;
 }
