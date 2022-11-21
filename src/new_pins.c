@@ -253,15 +253,16 @@ void RAW_SetPinValue(int index, int iVal){
     }
 }
 
-void Button_OnPressRelease(int index) {
+void Button_OnPressRelease(int index) 
+{
 	// fire event - button on pin <index> was released
-    addLogAdv(LOG_DEBUG, LOG_FEATURE_GENERAL,"%i Button_OnPressRelease\r\n", index);
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_GENERAL, "%i Button_OnPressRelease\r\n", index);
 	EventHandlers_FireEvent(CMD_EVENT_PIN_ONRELEASE,index);
 }
 
 void Button_OnInitialPressDown(int index)
 {
-    addLogAdv(LOG_INFO, LOG_FEATURE_GENERAL,"%i Button_OnInitialPressDown\r\n", index);
+    addLogAdv(LOG_DEBUG, LOG_FEATURE_GENERAL,"%i Button_OnInitialPressDown\r\n", index);
     EventHandlers_FireEvent(CMD_EVENT_PIN_ONPRESS, index);
     
     // so-called SetOption13 - instant reaction to touch instead of waiting for release
