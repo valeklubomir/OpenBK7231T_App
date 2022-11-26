@@ -4,6 +4,7 @@
 #include "../httpserver/new_http.h"
 #include "../cmnds/cmd_public.h"
 #include "../mqtt/new_mqtt.h"
+#include "../cmnds/cmd_public.h"
 
 void BL0942_Init();
 void BL0942_RunFrame();

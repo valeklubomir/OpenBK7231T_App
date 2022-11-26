@@ -560,7 +560,6 @@ extern "C" commandResult_t IR_Enable(const void *context, const char *cmd, const
     }
     ADDLOG_INFO(LOG_FEATURE_IR, (char *)"IREnable Protocol mask now 0x%08X", gIRProtocolEnable);
     return CMD_RES_OK;
-    
 }
 
 

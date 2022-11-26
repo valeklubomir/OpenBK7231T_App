@@ -3,12 +3,12 @@
 #include "../new_cfg.h"
 #include "../logging/logging.h"
 #include "../driver/drv_local.h"
+#include "../cmnds/cmd_public.h"
 #include "drv_i2c_local.h"
 #include "drv_i2c_public.h"
 // Commands register, execution API and cmd tokenizer
 #include "../cmnds/cmd_public.h"
 #include "../hal/hal_pins.h"
-
 
 
 
