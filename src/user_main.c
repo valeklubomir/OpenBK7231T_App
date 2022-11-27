@@ -38,6 +38,8 @@
 #include "driver/drv_ntp.h"
 #include "driver/drv_ssdp.h"
 
+#include "ota/ota.h"
+
 #ifdef PLATFORM_BEKEN
 #include <mcu_ps.h>
 #include <fake_clock_pub.h>
