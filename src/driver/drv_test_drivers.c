@@ -49,11 +49,40 @@ void Test_Power_RunFrame() {
 	BL_ProcessUpdate(final_v, final_c, final_p);
 }
 
+
+static volatile unsigned long test_tick = 0;
 //Test LED driver
-void Test_LED_Driver_Init() {
+void __attribute__((section(".code_IRAM"))) TestFunction(void)
+{
+    register int i;
+
+    GLOBAL_INT_DECLARATION();
+    GLOBAL_INT_DISABLE();
+
+    for(i=0;i<8;i++)
+        __asm("nop");
+    test_tick = test_tick + 1;
+
+    GLOBAL_INT_RESTORE();
 }
 
-void Test_LED_Driver_RunFrame() {
+
+void Test_LED_Driver_Init() 
+{
+    addLogAdv(LOG_INFO, LOG_FEATURE_DRV, "RAM_FUNC: %08lXh\n", (unsigned long)(TestFunction));
+    //TestFunction();
+}
+
+void Test_LED_Driver_RunFrame() 
+{
+    addLogAdv(LOG_INFO, LOG_FEATURE_DRV, "RAM_FUNC:  %08lXh\n", (unsigned long)(TestFunction));
+    addLogAdv(LOG_INFO, LOG_FEATURE_DRV, "TEST_TICK: %lu\n", (unsigned long)test_tick);
+}
+
+
+void Test_LED_Driver_RunQuick()
+{
+
 }
 
 /*

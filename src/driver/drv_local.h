@@ -21,6 +21,7 @@ void Test_Power_RunFrame();
 
 void Test_LED_Driver_Init();
 void Test_LED_Driver_RunFrame();
+void Test_LED_Driver_RunQuick();
 int Test_LED_Driver_OnChannelChanged(int ch, int value);
 
 void DRV_DGR_Init();
