@@ -66,7 +66,6 @@ void __attribute__((section(".code_IRAM"))) TestFunction(void)
     GLOBAL_INT_RESTORE();
 }
 
-
 void Test_LED_Driver_Init() 
 {
     addLogAdv(LOG_INFO, LOG_FEATURE_DRV, "RAM_FUNC: %08lXh\n", (unsigned long)(TestFunction));
