@@ -284,7 +284,6 @@ void SIM_GenerateChannelStatesDesc(char *o, int outLen) {
 }
 
 const char *CMD_ExpandConstantString(const char *s, const char *stop, char *out, int outLen) {
-	int idx;
 	const char *ret;
 	char tmp[32];
 
@@ -324,7 +323,9 @@ const char *CMD_ExpandConstantString(const char *s, const char *stop, char *out,
 	}
 	ret = strCompareBound(s, "$pinstates", stop, false);
 	if (ret) {
+        #ifdef WINDOWS
 		SIM_GeneratePinStatesDesc(out, outLen);
+        #endif
 		return ret;
 	}
 	ret = strCompareBound(s, "$channelstates", stop, false);
