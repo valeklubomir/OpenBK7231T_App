@@ -59,5 +59,8 @@ float DRV_GetReading(int type);
 bool DRV_IsMeasuringPower();
 void BL09XX_SaveEmeteringStatistics();
 
+void DRV_Toggler_ProcessChanges(http_request_t *request);
+void DRV_Toggler_AddToHtmlPage(http_request_t *request);
+
 #endif /* __DRV_PUBLIC_H__ */
 
