@@ -1806,7 +1806,8 @@ OBK_Publish_Result MQTT_DoItemPublish(int idx)
 #endif
 	// TODO
 	//type = CHANNEL_GetType(idx);
-	if (bWantsToPublish) {
+	if (bWantsToPublish) 
+    {
 		return MQTT_ChannelPublish(g_publishItemIndex, OBK_PUBLISH_FLAG_MUTEX_SILENT);
 	}
 
