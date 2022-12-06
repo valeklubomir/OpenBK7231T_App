@@ -1809,7 +1809,11 @@ OBK_Publish_Result MQTT_DoItemPublish(int idx)
 	if (bWantsToPublish) {
 		return MQTT_ChannelPublish(g_publishItemIndex, OBK_PUBLISH_FLAG_MUTEX_SILENT);
 	}
+#ifndef OBK_DISABLE_ALL_DRIVERS
     return DRV_ChannelPublish(idx);
+#else
+    return OBK_PUBLISH_WAS_NOT_REQUIRED; 
+#endif
 }
 
 // from 5ms quicktick
