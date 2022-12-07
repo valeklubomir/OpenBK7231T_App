@@ -1214,9 +1214,23 @@ void TuyaMCU_ProcessIncoming(const byte *data, int len) {
 
 			//}
 			break;
+
         case TUYA_CMD_WIFI_SELECT:
             addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"TuyaMCU_ProcessIncoming: received TUYA_CMD_WIFI_SELECT\n");
             break;
+
+		case TUYA_CMD_SET_DP:
+			// See: https://www.elektroda.com/rtvforum/viewtopic.php?p=20319441#20319441
+			// UPDATE: not needed, it is send from us to device
+			//if (version == 0) {
+			//	// This packet includes NO DateTime, ONLY RealTimeDataStorage
+			//	TuyaMCU_V0_ParseRealTimeWithRecordStorage(data + 6, len - 6, false);
+			//}
+			//else {
+
+			//}
+			break;
+
         default:
             addLogAdv(LOG_INFO, LOG_FEATURE_TUYAMCU,"TuyaMCU_ProcessIncoming: unhandled type %i\n",cmd);
             break;
