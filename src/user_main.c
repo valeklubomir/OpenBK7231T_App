@@ -917,6 +917,7 @@ void Main_Init_AfterDelay_Unsafe(bool bStartAutoRunScripts)
 #ifndef OBK_DISABLE_ALL_DRIVERS
 			DRV_StartDriver("IR");
 			//ScheduleDriverStart("IR",5);
+#endif
 #ifdef PLATFORM_BEKEN
         	// this just increments our idle counter variable.
         	// it registers a cllback from RTOS IDLE function.
