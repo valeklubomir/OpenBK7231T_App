@@ -14,6 +14,11 @@
 #include "../littlefs/our_lfs.h"
 #endif
 
+#ifdef PLATFORM_BEKEN
+#include "wlan_ui_pub.h"
+extern int bk_wlan_power_save_set_level(BK_PS_LEVEL level);
+#endif
+
 #define HASH_SIZE 128
 
 static int generateHashValue(const char* fname) {
