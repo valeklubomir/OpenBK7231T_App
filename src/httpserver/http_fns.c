@@ -1638,11 +1638,13 @@ void doHomeAssistantDiscovery(const char *topic, http_request_t *request) {
 	if (relayCount > 0) {
 		for (i = 0; i < CHANNEL_MAX; i++) {
 			if (h_isChannelRelay(i)) {
-				dev_info = hass_init_relay_device_info(i);
-				MQTT_QueuePublish(topic, dev_info->channel, hass_build_discovery_json(dev_info), OBK_PUBLISH_FLAG_RETAIN);
-				hass_free_device_info(dev_info);
-				dev_info = NULL;
-				discoveryQueued = true;
+                dev_info = hass_init_relay_device_info(i);
+				if (dev_info != NULL) {
+					MQTT_QueuePublish((char*)topic, dev_info->channel, (char*)hass_build_discovery_json(dev_info), OBK_PUBLISH_FLAG_RETAIN);
+					hass_free_device_info(dev_info);
+                    dev_info = NULL;
+                    discoveryQueued = true;
+				}
 			}
 		}
 	}
@@ -1651,7 +1653,7 @@ void doHomeAssistantDiscovery(const char *topic, http_request_t *request) {
 		for (i = 0; i < CHANNEL_MAX; i++) {
 			if (h_isChannelDigitalInput(i)) {
 				dev_info = hass_init_binary_sensor_device_info(i);
-				MQTT_QueuePublish(topic, dev_info->channel, hass_build_discovery_json(dev_info), OBK_PUBLISH_FLAG_RETAIN);
+				MQTT_QueuePublish((char*)topic, dev_info->channel, (char*)hass_build_discovery_json(dev_info), OBK_PUBLISH_FLAG_RETAIN);
 				hass_free_device_info(dev_info);
 				dev_info = NULL;
 				discoveryQueued = true;
@@ -1664,7 +1666,7 @@ void doHomeAssistantDiscovery(const char *topic, http_request_t *request) {
 			dev_info = hass_init_light_device_info(LIGHT_RGBCW);
 		}
 		// Enable + RGB control + CW control
-		MQTT_QueuePublish(topic, dev_info->channel, hass_build_discovery_json(dev_info), OBK_PUBLISH_FLAG_RETAIN);
+		MQTT_QueuePublish((char*)topic, dev_info->channel, (char*)hass_build_discovery_json(dev_info), OBK_PUBLISH_FLAG_RETAIN);
 		hass_free_device_info(dev_info);
 		dev_info = NULL;
 		discoveryQueued = true;
@@ -1686,7 +1688,7 @@ void doHomeAssistantDiscovery(const char *topic, http_request_t *request) {
 		}
 
 		if (dev_info != NULL) {
-			MQTT_QueuePublish(topic, dev_info->channel, hass_build_discovery_json(dev_info), OBK_PUBLISH_FLAG_RETAIN);
+			MQTT_QueuePublish((char*)topic, dev_info->channel, (char*)hass_build_discovery_json(dev_info), OBK_PUBLISH_FLAG_RETAIN);
 			hass_free_device_info(dev_info);
 			dev_info = NULL;
 			discoveryQueued = true;
@@ -1697,8 +1699,8 @@ void doHomeAssistantDiscovery(const char *topic, http_request_t *request) {
 	if (measuringPower == true) {
 		for (i = 0; i < OBK_NUM_SENSOR_COUNT; i++)
 		{
-			dev_info = hass_init_power_sensor_device_info(i);
-			MQTT_QueuePublish(topic, dev_info->channel, hass_build_discovery_json(dev_info), OBK_PUBLISH_FLAG_RETAIN);
+			dev_info = hass_init_sensor_device_info(i);
+			MQTT_QueuePublish((char*)topic, dev_info->channel, (char *)hass_build_discovery_json(dev_info), OBK_PUBLISH_FLAG_RETAIN);
 			hass_free_device_info(dev_info);
 			discoveryQueued = true;
 		}
@@ -1708,11 +1710,11 @@ void doHomeAssistantDiscovery(const char *topic, http_request_t *request) {
 	for (i = 0; i < PLATFORM_GPIO_MAX; i++) {
 		if (IS_PIN_DHT_ROLE(g_cfg.pins.roles[i]) || IS_PIN_TEMP_HUM_SENSOR_ROLE(g_cfg.pins.roles[i])) {
 			dev_info = hass_init_sensor_device_info(TEMPERATURE_SENSOR, PIN_GetPinChannelForPinIndex(i));
-			MQTT_QueuePublish(topic, dev_info->channel, hass_build_discovery_json(dev_info), OBK_PUBLISH_FLAG_RETAIN);
+			MQTT_QueuePublish((char*)topic, dev_info->channel, (char*)hass_build_discovery_json(dev_info), OBK_PUBLISH_FLAG_RETAIN);
 			hass_free_device_info(dev_info);
 
 			dev_info = hass_init_sensor_device_info(HUMIDITY_SENSOR, PIN_GetPinChannel2ForPinIndex(i));
-			MQTT_QueuePublish(topic, dev_info->channel, hass_build_discovery_json(dev_info), OBK_PUBLISH_FLAG_RETAIN);
+			MQTT_QueuePublish((char*)topic, dev_info->channel, (char*)hass_build_discovery_json(dev_info), OBK_PUBLISH_FLAG_RETAIN);
 			hass_free_device_info(dev_info);
 
 			discoveryQueued = true;

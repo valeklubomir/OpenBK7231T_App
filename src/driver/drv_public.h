@@ -65,5 +65,7 @@ void DRV_Toggler_AddToHtmlPage(http_request_t *request);
 void DRV_HTTPButtons_ProcessChanges(http_request_t *request);
 void DRV_HTTPButtons_AddToHtmlPage(http_request_t *request);
 
+void DHT_OnEverySecond();
+
 #endif /* __DRV_PUBLIC_H__ */
 
