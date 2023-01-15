@@ -75,6 +75,7 @@ void DRV_InitHTTPButtons();
 void CHT8305_Init();
 void CHT8305_OnEverySecond();
 void CHT8305_AppendInformationToHTTPIndexPage(http_request_t* request);
+OBK_Publish_Result CHT8305_OnChannelChanged(int ch, int value);
 
 void SHT3X_Init();
 void SHT3X_AppendInformationToHTTPIndexPage(http_request_t* request);

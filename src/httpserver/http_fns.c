@@ -1699,7 +1699,7 @@ void doHomeAssistantDiscovery(const char *topic, http_request_t *request) {
 	if (measuringPower == true) {
 		for (i = 0; i < OBK_NUM_SENSOR_COUNT; i++)
 		{
-			dev_info = hass_init_sensor_device_info(i);
+			dev_info = hass_init_sensor_device_info(POWER_SENSOR, i);
 			MQTT_QueuePublish((char*)topic, dev_info->channel, (char *)hass_build_discovery_json(dev_info), OBK_PUBLISH_FLAG_RETAIN);
 			hass_free_device_info(dev_info);
 			discoveryQueued = true;

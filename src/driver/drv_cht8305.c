@@ -76,10 +76,12 @@ void CHT8305_Init() {
 
 	addLogAdv(LOG_INFO, LOG_FEATURE_SENSOR, "DRV_CHT8304_init: ID: %02X %02X", buff[0], buff[1]);
 
+}
 
-
-	}
-
+OBK_Publish_Result CHT8305_OnChannelChanged(int ch, int value) 
+{
+    return OBK_PUBLISH_WAS_NOT_REQUIRED;
+}
 
 void CHT8305_OnEverySecond() {
 
