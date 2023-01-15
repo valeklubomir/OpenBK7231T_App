@@ -264,7 +264,6 @@ void SHT3X_Init() {
 	CMD_RegisterCommand("SHT_GetStatus", SHT3X_GetStatusCmd, NULL);
 }
 
-
 void SHT3X_AppendInformationToHTTPIndexPage(http_request_t* request)
 {
 	hprintf255(request, "<h2>SHT3X Temperature=%f, Humidity=%f</h2>", g_temp, g_humid);

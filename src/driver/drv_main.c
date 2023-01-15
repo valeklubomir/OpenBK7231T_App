@@ -121,7 +121,7 @@ static driver_t g_drivers[] = {
 #if defined(PLATFORM_BEKEN) || defined(WINDOWS)
 	{ "CHT8305",	CHT8305_Init,		CHT8305_OnEverySecond,		CHT8305_AppendInformationToHTTPIndexPage, NULL, NULL, CHT8305_OnChannelChanged, NULL, false },
 	{ "MAX72XX",	DRV_MAX72XX_Init,	NULL,		                NULL, NULL, NULL, NULL, NULL, false },
-	{ "SHT3X",	    SHT3X_Init,	        SHT3X_OnEverySecond,		SHT3X_AppendInformationToHTTPIndexPage, NULL, SHT3X_StopDriver, SHT3X_OnChannelChanged, NULL, false },
+	{ "SHT3X",	    SHT3X_Init,	        NULL,                 		SHT3X_AppendInformationToHTTPIndexPage, NULL, SHT3X_StopDriver, NULL, NULL, false },
 #endif
     { "Bridge",     Bridge_driver_Init, NULL,                       NULL, Bridge_driver_QuickFrame, Bridge_driver_DeInit, Bridge_driver_OnChannelChanged, Bridge_driver_ChannelPublish, false }
 };
