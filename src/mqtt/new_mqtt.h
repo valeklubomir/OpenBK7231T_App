@@ -101,14 +101,6 @@ typedef struct MqttPublishItem
 #define MQTT_QUEUED_ITEMS_PUBLISHED_AT_ONCE	3
 #define MQTT_MAX_QUEUE_SIZE	                7
 
-#define MQTT_STACK_BUFFER_SIZE 32
-#define MQTT_TOTAL_BUFFER_SIZE 4096
-typedef struct obk_mqtt_publishReplyPrinter_s {
-    char *allocated;
-    char stackBuffer[MQTT_STACK_BUFFER_SIZE];
-    int curLen;
-} obk_mqtt_publishReplyPrinter_t;
-
 // callback function for mqtt.
 // return 0 to allow the incoming topic/data to be processed by others/channel set.
 // return 1 to 'eat the packet and terminate further processing.
@@ -167,8 +159,5 @@ typedef struct obk_mqtt_publishReplyPrinter_s {
 
 void MQTT_PublishPrinterContentsToStat(obk_mqtt_publishReplyPrinter_t *printer, const char *statName);
 void MQTT_PublishPrinterContentsToTele(obk_mqtt_publishReplyPrinter_t *printer, const char *statName);
-
-
-void MQTT_PublishPrinterContentsToStat(obk_mqtt_publishReplyPrinter_t *printer, const char *statName);
 
 #endif // __NEW_MQTT_H__
