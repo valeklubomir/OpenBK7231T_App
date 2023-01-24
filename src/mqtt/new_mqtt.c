@@ -651,7 +651,6 @@ int channelSet(obk_mqtt_request_t* request) {
 // will do echo, toggle power and do ecoh
 //
 
-
 void MQTT_PublishPrinterContentsToStat(obk_mqtt_publishReplyPrinter_t *printer, const char *statName) {
 	const char *toUse;
 	if (printer->allocated)
