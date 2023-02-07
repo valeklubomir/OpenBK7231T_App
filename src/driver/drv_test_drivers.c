@@ -56,14 +56,18 @@ void __attribute__((section(".code_IRAM"))) TestFunction(void)
 {
     register int i;
 
+#if defined(PLATFORM_BEKEN)
     GLOBAL_INT_DECLARATION();
     GLOBAL_INT_DISABLE();
+#endif    
 
     for(i=0;i<8;i++)
         __asm("nop");
     test_tick = test_tick + 1;
 
+#if defined(PLATFORM_BEKEN)
     GLOBAL_INT_RESTORE();
+#endif    
 }
 
 void Test_LED_Driver_Init() 
