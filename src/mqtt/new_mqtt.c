@@ -595,7 +595,7 @@ int channelSet(obk_mqtt_request_t* request) {
 
 	addLogAdv(LOG_DEBUG, LOG_FEATURE_MQTT, "channelSet topic %i with arg %s", request->topic, request->received);
 
-	p = MQTT_RemoveClientFromTopic(request->topic,0);
+	p = (char *)MQTT_RemoveClientFromTopic(request->topic,0);
 
 	if (p == NULL) {
 		return 0;

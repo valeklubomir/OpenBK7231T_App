@@ -20,6 +20,7 @@
 #include "driver/drv_ir.h"
 #include "uart.h"
 #include "intc_pub.h"
+#include "wlan_ui_pub.h"
 #endif
 
 
